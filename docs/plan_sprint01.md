@@ -20,17 +20,18 @@ This first sprint should lay the foundations of the project on which we can buil
 | T3.2 | Implement navigation between screens | Asier | 1.5 | High | Not done |
 | T3.3 | Document the *data model diagram* in `design.md` | Asier | 1 | Low | Done (2) |
 | T3.4 | Implement the *data model diagram* classes and their functions, leaving the logic as `@TODO` | Asier | 1.5 | Medium | Done (2) |
+| T3.5 | Document `color-palette.md` | Asier | 0.1 | Low | Done (0.5) |
 | T4.1 | Create a splash screen with the logo | Asier | 0.5 | Low | Done (0.5) |
 | T4.2 | Implement an *about page* and a *Terms & Conditions screen* | Asier | 2 | Low | Done (1) |
 | T4.3 | Add a preferences screen with multiple languages | Asier | 0.5 | Very low | Done (1) |
 
 ---
 ## 3. Definition of Done (DoD)
-- [ ] Domain model implemented in domain folder
+- [ x ] Domain model implemented in domain folder
 - [ ] Core screen layout created
 - [ ] Navigation between screens, classes and functions implemented
-- [ ] Palette applied in Theme
-- [ ] README updated
+- [ x ] Palette applied in Theme
+- [ x ] README updated
 - [ ] Release published
 
 ---
