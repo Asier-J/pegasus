@@ -18,7 +18,7 @@ This first sprint should lay the foundations of the project on which we can buil
 | T2.5 | Organize the repository (create folders and subfolders) | Asier | 0.1 | Medium | Done (0.1) |
 | T3.1 | Develop the *core screen layouts* | Asier | 3 | Very high | Not done |
 | T3.2 | Implement navigation between screens | Asier | 1.5 | High | Not done |
-| T3.3 | Document the *data model diagram* in `design.md` | Asier | 1 | Low | Not done |
+| T3.3 | Document the *data model diagram* in `design.md` | Asier | 1 | Low | Done (2) |
 | T3.4 | Implement the *data model diagram* classes and their functions, leaving the logic as `@TODO` | Asier | 1.5 | Medium | Done (2) |
 | T4.1 | Create a splash screen with the logo | Asier | 0.5 | Low | Done (0.5) |
 | T4.2 | Implement an *about page* and a *Terms & Conditions screen* | Asier | 2 | Low | Done (1) |
