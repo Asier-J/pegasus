@@ -1,48 +1,40 @@
 # Sprint 01 – Planning Document
-
 ## 1. Sprint Goal
-Este primer sprint debe servir para sentar las bases del proyecto en las que poder programar en un futuro, así como empezar a dar los primeros pasos en la configuración y planificación de la app.
+This first sprint should lay the foundations of the project on which we can build in the future, as well as taking the first steps in the configuration and planning of the app.
 
 ---
-
 ## 2. Sprint Backlog
-
-| ID | Tarea | Responsable | Estimación (h) | Prioridad |
-|----|-------|-------------|----------------|-----------|
-| T1.1 | Crear nombre del modelo | Asier | 1 | Muy alta |
-| T1.2 | Crear logo | Asier | 1 | Alta |
-| T1.3 | Definir la versión de Android | Asier | 0.25 | Media |
-| T1.4 | Definir la versión de Kotlin | Asier | 0.25 | Media |
-| T1.5 | Inicializar el proyecto en Android Studio | Asier | 0 | Baja |
-| T2.1 | Crear e inicializar repositorio de Github | Asier | 0 | Muy alta |
-| T2.2 | Escoger licencia | Asier | 0.25 | Baja |
-| T2.3 | Redactar `docs/design.md`, `CONTRIBUTING.md` y `README.md` | Asier | 0.5 | Alta |
-| T2.4 | Redactar `plan_sprint01.md` | Asier | 1 | Muy alta |
-| T2.5 | Organizar el repositorio (crear carpetas y subcarpetas) | Asier | 0.1 | Media |
-| T3.1 | Desarrollar los *core screen layouts* | Asier | 3 | Muy alta |
-| T3.2 | Implementar la navegación entre pantallas | Asier | 1.5 | Alta |
-| T3.3 | Documentar el *data model diagram* en `design.md` | Asier | 1 | Baja |
-| T3.4 | Implementar las clases del *data model diagram* y sus funciones, dejando como `@TODO` la lógica | Asier | 1.5 | Media |
-| T4.1 | Crear una splash screen con el logo | Asier | 0.5 | Baja |
-| T4.2 | Implementar un *about page* y un *Terms & Conditions screen* | Asier | 1 | Baja |
-| T4.3 | Añadir una pantalla de preferencias (*mock-only*) con múltiples lenguajes | Asier | 0.5 | Muy baja |
-
+| ID | Task | Assignee | Estimation (h) | Priority |
+|----|------|----------|----------------|----------|
+| T1.1 | Create the domain model name | Asier | 1 | Very high |
+| T1.2 | Create logo | Asier | 1 | High |
+| T1.3 | Define Android version | Asier | 0.25 | Medium |
+| T1.4 | Define Kotlin version | Asier | 0.25 | Medium |
+| T1.5 | Initialize project in Android Studio | Asier | 0 | Low |
+| T2.1 | Create and initialize GitHub repository | Asier | 0 | Very high |
+| T2.2 | Choose license | Asier | 0.25 | Low |
+| T2.3 | Write `docs/design.md`, `CONTRIBUTING.md` and `README.md` | Asier | 0.5 | High |
+| T2.4 | Write `plan_sprint01.md` | Asier | 1 | Very high |
+| T2.5 | Organize the repository (create folders and subfolders) | Asier | 0.1 | Medium |
+| T3.1 | Develop the *core screen layouts* | Asier | 3 | Very high |
+| T3.2 | Implement navigation between screens | Asier | 1.5 | High |
+| T3.3 | Document the *data model diagram* in `design.md` | Asier | 1 | Low |
+| T3.4 | Implement the *data model diagram* classes and their functions, leaving the logic as `@TODO` | Asier | 1.5 | Medium |
+| T4.1 | Create a splash screen with the logo | Asier | 0.5 | Low |
+| T4.2 | Implement an *about page* and a *Terms & Conditions screen* | Asier | 2 | Low |
+| T4.3 | Add a preferences screen (*mock-only*) with multiple languages | Asier | 0.5 | Very low |
 
 ---
-
 ## 3. Definition of Done (DoD)
-
-- [ ] Modelo de dominio implementado en carpeta domain
-- [ ] Core screen layout creado
-- [ ] Navegación entre pantallas, clases y funciones implementados
-- [ ] Paleta aplicada en Theme
-- [ ] README actualizado
-- [ ] Release publicada
+- [ ] Domain model implemented in domain folder
+- [ ] Core screen layout created
+- [ ] Navigation between screens, classes and functions implemented
+- [ ] Palette applied in Theme
+- [ ] README updated
+- [ ] Release published
 
 ---
-
-## 4. Riesgos identificados
-
-- Poca experiencia con Kotlin
-- Poca experiencia desarrollando apps
-- Pobre estética: será más eficiente que bonito
+## 4. Identified Risks
+- Little experience with Kotlin
+- Little experience developing apps
+- Poor aesthetics: it will be more functional than beautiful
