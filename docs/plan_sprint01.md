@@ -27,11 +27,11 @@ This first sprint should lay the foundations of the project on which we can buil
 
 ---
 ## 3. Definition of Done (DoD)
-- [ x ] Domain model implemented in domain folder
+- [x] Domain model implemented in domain folder
 - [ ] Core screen layout created
 - [ ] Navigation between screens, classes and functions implemented
-- [ x ] Palette applied in Theme
-- [ x ] README updated
+- [x] Palette applied in Theme
+- [x] README updated
 - [ ] Release published
 
 ---
