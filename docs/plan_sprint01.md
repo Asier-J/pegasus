@@ -22,7 +22,7 @@ This first sprint should lay the foundations of the project on which we can buil
 | T3.4 | Implement the *data model diagram* classes and their functions, leaving the logic as `@TODO` | Asier | 1.5 | Medium |
 | T4.1 | Create a splash screen with the logo | Asier | 0.5 | Low |
 | T4.2 | Implement an *about page* and a *Terms & Conditions screen* | Asier | 2 | Low |
-| T4.3 | Add a preferences screen (*mock-only*) with multiple languages | Asier | 0.5 | Very low |
+| T4.3 | Add a preferences screen with multiple languages | Asier | 0.5 | Very low |
 
 ---
 ## 3. Definition of Done (DoD)
