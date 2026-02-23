@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -25,33 +24,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.pegasus.R
+import com.example.pegasus.safePopBackStack
 
-// ─── Colors ───────────────────────────────────────────────────────────────────
-private val NavyDeep    = Color(0xFF0A1628)
-private val NavyMid     = Color(0xFF102040)
-private val AzureBlue   = Color(0xFF1565C0)
-private val SkyBlue     = Color(0xFF42A5F5)
-private val IceWhite    = Color(0xFFF0F6FF)
-private val SubtleGray  = Color(0xFFB0BEC5)
-private val CardBg      = Color(0xFF112240)
-
-// ─── Data ─────────────────────────────────────────────────────────────────────
 private data class TeamMember(val name: String, val role: String)
 
-private val teamMembers = listOf(
-    TeamMember("Asier Juárez", "Lead Developer")
-)
-
-// ─── Screen ───────────────────────────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(navController: NavController) {
+    val colors      = MaterialTheme.colorScheme
     val scrollState = rememberScrollState()
+
     var visible by remember { mutableStateOf(false) }
     val alpha by animateFloatAsState(
-        targetValue = if (visible) 1f else 0f,
-        animationSpec = tween(durationMillis = 600),
-        label = "fade"
+        targetValue   = if (visible) 1f else 0f,
+        animationSpec = tween(600),
+        label         = "fade"
     )
 
     LaunchedEffect(Unit) { visible = true }
@@ -59,7 +46,7 @@ fun AboutScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(colors = listOf(NavyDeep, NavyMid)))
+            .background(Brush.verticalGradient(listOf(colors.background, colors.surfaceVariant)))
     ) {
         Column(
             modifier = Modifier
@@ -70,26 +57,26 @@ fun AboutScreen(navController: NavController) {
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = R.string.about_title),
-                        color = IceWhite,
+                        text       = stringResource(R.string.about_title),
+                        color      = colors.onBackground,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize   = 18.sp
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { navController.safePopBackStack() }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(id = R.string.about_back_button_description),
-                            tint = SkyBlue
+                            imageVector        = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.about_back_button_description),
+                            tint               = colors.primary
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = androidx.compose.ui.graphics.Color.Transparent)
             )
 
             Column(
-                modifier = Modifier
+                modifier            = Modifier
                     .weight(1f)
                     .verticalScroll(scrollState)
                     .padding(horizontal = 20.dp, vertical = 8.dp),
@@ -97,32 +84,32 @@ fun AboutScreen(navController: NavController) {
             ) {
                 // ── App Hero ─────────────────────────────────────────────────
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier            = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(text = "🐴", fontSize = 56.sp)
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = stringResource(id = R.string.about_app_name),
-                        color = SkyBlue,
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.ExtraBold,
+                        text          = stringResource(R.string.about_app_name),
+                        color         = colors.primary,
+                        fontSize      = 32.sp,
+                        fontWeight    = FontWeight.ExtraBold,
                         letterSpacing = 2.sp
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Box(
                         modifier = Modifier
                             .background(
-                                brush = Brush.horizontalGradient(listOf(AzureBlue, SkyBlue)),
-                                shape = RoundedCornerShape(20.dp)
+                                Brush.horizontalGradient(listOf(colors.primaryContainer, colors.primary)),
+                                RoundedCornerShape(20.dp)
                             )
                             .padding(horizontal = 16.dp, vertical = 4.dp)
                     ) {
                         Text(
-                            text = stringResource(id = R.string.about_version),
-                            color = IceWhite,
-                            fontSize = 12.sp,
+                            text       = stringResource(R.string.about_version),
+                            color      = colors.onPrimary,
+                            fontSize   = 12.sp,
                             fontWeight = FontWeight.SemiBold
                         )
                     }
@@ -130,18 +117,18 @@ fun AboutScreen(navController: NavController) {
 
                 // ── Summary Card ──────────────────────────────────────────────
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = CardBg),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                    modifier  = Modifier.fillMaxWidth(),
+                    shape     = RoundedCornerShape(12.dp),
+                    colors    = CardDefaults.cardColors(containerColor = colors.surface),
+                    elevation = CardDefaults.cardElevation(0.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        SectionTitle(text = stringResource(id = R.string.about_summary_title))
+                        AboutSectionTitle(text = stringResource(R.string.about_summary_title))
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = stringResource(id = R.string.about_summary_body),
-                            color = Color(0xFFCDD6E8),
-                            fontSize = 13.sp,
+                            text       = stringResource(R.string.about_summary_body),
+                            color      = colors.onSurface,
+                            fontSize   = 13.sp,
                             lineHeight = 21.sp
                         )
                     }
@@ -149,65 +136,48 @@ fun AboutScreen(navController: NavController) {
 
                 // ── Tech Stack Card ───────────────────────────────────────────
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = CardBg),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                    modifier  = Modifier.fillMaxWidth(),
+                    shape     = RoundedCornerShape(12.dp),
+                    colors    = CardDefaults.cardColors(containerColor = colors.surface),
+                    elevation = CardDefaults.cardElevation(0.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        SectionTitle(text = stringResource(id = R.string.about_tech_stack_title))
+                        AboutSectionTitle(text = stringResource(R.string.about_tech_stack_title))
                         Spacer(modifier = Modifier.height(12.dp))
-                        TechItem(
-                            label = stringResource(id = R.string.about_tech_stack_language),
-                            value = stringResource(id = R.string.about_tech_stack_language_value)
-                        )
-                        TechItem(
-                            label = stringResource(id = R.string.about_tech_stack_ui_framework),
-                            value = stringResource(id = R.string.about_tech_stack_ui_framework_value)
-                        )
-                        TechItem(
-                            label = stringResource(id = R.string.about_tech_stack_navigation),
-                            value = stringResource(id = R.string.about_tech_stack_navigation_value)
-                        )
-                        TechItem(
-                            label = stringResource(id = R.string.about_tech_stack_min_sdk),
-                            value = stringResource(id = R.string.about_tech_stack_min_sdk_value)
-                        )
-                        TechItem(
-                            label = stringResource(id = R.string.about_tech_stack_target_sdk),
-                            value = stringResource(id = R.string.about_tech_stack_target_sdk_value)
-                        )
+                        TechItem(stringResource(R.string.about_tech_stack_language),    stringResource(R.string.about_tech_stack_language_value))
+                        TechItem(stringResource(R.string.about_tech_stack_ui_framework),stringResource(R.string.about_tech_stack_ui_framework_value))
+                        TechItem(stringResource(R.string.about_tech_stack_navigation),  stringResource(R.string.about_tech_stack_navigation_value))
+                        TechItem(stringResource(R.string.about_tech_stack_min_sdk),     stringResource(R.string.about_tech_stack_min_sdk_value))
+                        TechItem(stringResource(R.string.about_tech_stack_target_sdk),  stringResource(R.string.about_tech_stack_target_sdk_value))
                     }
                 }
 
                 // ── Team Card ─────────────────────────────────────────────────
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = CardBg),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                    modifier  = Modifier.fillMaxWidth(),
+                    shape     = RoundedCornerShape(12.dp),
+                    colors    = CardDefaults.cardColors(containerColor = colors.surface),
+                    elevation = CardDefaults.cardElevation(0.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        SectionTitle(text = stringResource(id = R.string.about_team_title))
+                        AboutSectionTitle(text = stringResource(R.string.about_team_title))
                         Spacer(modifier = Modifier.height(12.dp))
-                        teamMembers.forEach { member ->
-                            TeamMemberRow(
-                                member = TeamMember(
-                                    name = stringResource(id = R.string.about_team_member_name),
-                                    role = stringResource(id = R.string.about_team_member_role)
-                                )
+                        TeamMemberRow(
+                            member = TeamMember(
+                                name = stringResource(R.string.about_team_member_name),
+                                role = stringResource(R.string.about_team_member_role)
                             )
-                        }
+                        )
                     }
                 }
 
                 // ── Footer ────────────────────────────────────────────────────
                 Text(
-                    text = stringResource(id = R.string.about_footer),
-                    color = SubtleGray,
-                    fontSize = 11.sp,
+                    text      = stringResource(R.string.about_footer),
+                    color     = colors.onSurfaceVariant,
+                    fontSize  = 11.sp,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier  = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -215,68 +185,61 @@ fun AboutScreen(navController: NavController) {
     }
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 @Composable
-private fun SectionTitle(text: String) {
+private fun AboutSectionTitle(text: String) {
+    val colors = MaterialTheme.colorScheme
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(
             modifier = Modifier
                 .width(3.dp)
                 .height(20.dp)
                 .background(
-                    brush = Brush.verticalGradient(listOf(AzureBlue, SkyBlue)),
-                    shape = RoundedCornerShape(2.dp)
+                    Brush.verticalGradient(listOf(colors.primaryContainer, colors.primary)),
+                    RoundedCornerShape(2.dp)
                 )
         )
         Spacer(modifier = Modifier.width(10.dp))
-        Text(
-            text = text,
-            color = SkyBlue,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 14.sp
-        )
+        Text(text = text, color = colors.primary, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
     }
 }
 
 @Composable
 private fun TechItem(label: String, value: String) {
+    val colors = MaterialTheme.colorScheme
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
+        modifier              = Modifier.fillMaxWidth().padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = label, color = SubtleGray, fontSize = 13.sp)
-        Text(text = value, color = IceWhite, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+        Text(text = label, color = colors.onSurfaceVariant, fontSize = 13.sp)
+        Text(text = value, color = colors.onSurface, fontSize = 13.sp, fontWeight = FontWeight.Medium)
     }
 }
 
 @Composable
 private fun TeamMemberRow(member: TeamMember) {
+    val colors = MaterialTheme.colorScheme
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 6.dp),
+        modifier          = Modifier.fillMaxWidth().padding(vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
-            modifier = Modifier
+            modifier         = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
-                .background(Brush.linearGradient(listOf(AzureBlue, SkyBlue))),
+                .background(Brush.linearGradient(listOf(colors.primaryContainer, colors.primary))),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = member.name.first().toString(),
-                color = IceWhite,
+                text       = member.name.first().toString(),
+                color      = colors.onPrimary,
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                fontSize   = 16.sp
             )
         }
         Spacer(modifier = Modifier.width(12.dp))
         Column {
-            Text(text = member.name, color = IceWhite, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
-            Text(text = member.role, color = SubtleGray, fontSize = 12.sp)
+            Text(text = member.name, color = colors.onSurface,        fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+            Text(text = member.role, color = colors.onSurfaceVariant, fontSize = 12.sp)
         }
     }
 }
