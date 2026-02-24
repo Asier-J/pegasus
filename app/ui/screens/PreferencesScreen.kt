@@ -42,9 +42,9 @@ enum class AppLanguage(val label: String, val flag: String, val code: String) {
     CATALAN("Català",  "🏴",   "ca")
 }
 
-enum class AppTheme(val label: String, val icon: String) {
-    DARK("Dark",   "🌙"),
-    LIGHT("Light", "☀️")
+enum class AppTheme(val labelResId: Int, val icon: String) {
+    DARK(R.string.preferences_theme_dark,   "🌙"),
+    LIGHT(R.string.preferences_theme_light, "☀️")
 }
 
 // ─── SharedPreferences helpers ────────────────────────────────────────────────
@@ -190,7 +190,7 @@ fun PreferencesScreen(navController: NavController) {
                     ) {
                         AppTheme.values().forEach { theme ->
                             ThemeChip(
-                                label    = "${theme.icon}  ${theme.label}",
+                                label    = "${theme.icon}  ${stringResource(id = theme.labelResId)}",
                                 selected = selectedTheme == theme,
                                 onClick  = {
                                     if (selectedTheme != theme) {
@@ -212,8 +212,7 @@ fun PreferencesScreen(navController: NavController) {
                         .clip(RoundedCornerShape(10.dp))
                         .background(colors.surface)
                         .padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                    verticalAlignment = Alignment.CenterVertically) {
                     Text(text = "ℹ️", fontSize = 16.sp)
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
