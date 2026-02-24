@@ -36,7 +36,6 @@ class MainActivity : ComponentActivity() {
 
         var isChecking = true
         lifecycleScope.launch {
-            delay(3000L)
             isChecking = false
         }
         installSplashScreen().apply {

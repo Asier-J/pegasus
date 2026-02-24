@@ -15,19 +15,22 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.pegasus.R
 
 // ─── Bottom Nav Items ─────────────────────────────────────────────────────────
-sealed class BottomNavItem(val route: String, val icon: ImageVector, val label: String) {
-    object Home    : BottomNavItem("home",    Icons.Filled.Home,           "Home")
-    object Trips   : BottomNavItem("trips",   Icons.Filled.FlightTakeoff,  "Trips")
-    object Map     : BottomNavItem("map",     Icons.Filled.Map,            "Map")
-    object AI      : BottomNavItem("ai",      Icons.Filled.AutoAwesome,    "AI")
-    object Profile : BottomNavItem("profile", Icons.Filled.Person,         "Profile")
+sealed class BottomNavItem(val route: String, val icon: ImageVector, val labelResId: Int) {
+    object Home    : BottomNavItem("home",    Icons.Filled.Home,       R.string.nav_home)
+    object Trips   : BottomNavItem("trips",   Icons.Filled.TravelExplore, R.string.nav_trips)
+    object Map     : BottomNavItem("map",     Icons.Filled.Map,      R.string.nav_map)
+    object AI      : BottomNavItem("ai",      Icons.Filled.Star,       R.string.nav_ai)
+    object Profile : BottomNavItem("profile", Icons.Filled.Person,     R.string.nav_profile)
 }
 
 val bottomNavItems = listOf(
@@ -38,19 +41,11 @@ val bottomNavItems = listOf(
     BottomNavItem.Profile
 )
 
-// ─── Greetings ────────────────────────────────────────────────────────────────
-private val greetings = listOf(
-    "Ready for your next adventure? 🌍",
-    "Where to next? ✈️",
-    "The world is waiting for you 🗺️",
-    "Let's plan something amazing 🐴",
-    "Bon voyage! 🌟"
-)
-
 // ─── HomeScreen ───────────────────────────────────────────────────────────────
 @Composable
 fun HomeScreen(navController: NavHostController) {
     val colors = MaterialTheme.colorScheme
+    val context = LocalContext.current
 
     var visible by remember { mutableStateOf(false) }
     val alpha by animateFloatAsState(
@@ -75,7 +70,10 @@ fun HomeScreen(navController: NavHostController) {
         label = "emojiScale"
     )
 
-    val greeting = remember { greetings.random() }
+    val greeting = remember {
+        val array = context.resources.getStringArray(R.array.home_greetings)
+        array.random()
+    }
 
     LaunchedEffect(Unit) { visible = true }
 
@@ -99,7 +97,7 @@ fun HomeScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text          = "PEGASUS",
+                text          = stringResource(id = R.string.home_app_title),
                 color         = colors.onBackground,
                 fontSize      = 30.sp,
                 fontWeight    = FontWeight.ExtraBold,
@@ -144,6 +142,7 @@ fun PegasusBottomBar(navController: NavHostController) {
     ) {
         bottomNavItems.forEach { item ->
             val selected = currentRoute == item.route
+            val label = stringResource(id = item.labelResId)
             NavigationBarItem(
                 selected = selected,
                 onClick  = {
@@ -158,12 +157,12 @@ fun PegasusBottomBar(navController: NavHostController) {
                 icon = {
                     Icon(
                         imageVector        = item.icon,
-                        contentDescription = item.label
+                        contentDescription = label
                     )
                 },
                 label = {
                     Text(
-                        text     = item.label,
+                        text     = label,
                         fontSize = 11.sp,
                         fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
                     )
