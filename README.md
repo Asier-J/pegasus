@@ -1,36 +1,32 @@
 # 🐴 Pegasus
-
-Bienvenido a **Pegasus**, la app que te da alas para explorar el mundo. Ya sea que estés planeando una gran expedición o una escapada de fin de semana, Pegasus te ayuda a organizar tus itinerarios, descubrir lugares extraordinarios y volar hacia tu próxima aventura sin preocupaciones.
-
----
-
-## 📖 Sobre el Proyecto
-
-Pegasus nació con la idea de llevar a los viajeros más allá de lo ordinario, igual que el caballo alado de la mitología griega que surcaba los cielos sin límites. Queríamos crear algo que **nosotros mismos usaríamos**, una herramienta que eliminara el caos de organizar un viaje y te permitiera despegar sin esfuerzo.
-
-Esta app está construida con **Kotlin + Jetpack Compose**, asegurando una experiencia fluida y moderna. Incorpora navegación intuitiva, gestión de preferencias y muchas más funciones para que cada viaje sea un vuelo legendario.
+Welcome to **Pegasus**, the app that gives you wings to explore the world. Whether you're planning a grand expedition or a weekend getaway, Pegasus helps you organize your itineraries, discover extraordinary places, and fly toward your next adventure worry-free.
 
 ---
 
-## 🔥 Características Principales
+## 📖 About the Project
+Pegasus was born with the idea of taking travelers beyond the ordinary, just like the winged horse from Greek mythology that soared through the skies without limits. We wanted to create something **we would use ourselves** — a tool that eliminates the chaos of trip planning and lets you take off effortlessly.
 
-✅ **Planificación de Itinerarios** - Traza tu ruta y emprende el vuelo en segundos. 📅  
-✅ **Búsqueda de Lugares Cercanos** - Descubre restaurantes, atracciones y más allá del horizonte. 🏛️  
-✅ **Almacenamiento de Imágenes** - Guarda los paisajes que has sobrevolado.  
-✅ **Personalizar preferencias de usuario ⚙️**  
-✅ **Soporte para múltiples idiomas 🌎**  
+This app is built with **Kotlin + Jetpack Compose**, ensuring a smooth and modern experience. It features intuitive navigation, preference management, and many more functions to make every trip a legendary flight.
 
 ---
 
-## 📲 Tecnologías Usadas
-
-- **Kotlin** - Lenguaje principal de desarrollo.
-- **Jetpack Compose** - Para la UI moderna y reactiva.
-- **Navigation Component** - Para la gestión fluida de pantallas.
-- **Compatibilidad con Android Oreo (API 26+)**
-    📌 Razón: Android Oreo es una versión estable y ampliamente utilizada. Garantiza compatibilidad con la mayoría de los dispositivos sin perder acceso a funcionalidades modernas.
+## 🔥 Key Features
+✅ **Itinerary Planning** - Map out your route and take off in seconds. 📅  
+✅ **Nearby Places Search** - Discover restaurants, attractions, and more beyond the horizon. 🏛️  
+✅ **Image Storage** - Save the landscapes you've flown over.  
+✅ **User Preference Customization ⚙️**  
+✅ **Multi-language Support 🌎**  
 
 ---
 
-## 👥 Equipo de Desarrollo
+## 📲 Technologies Used
+- **Kotlin** - Primary development language.
+- **Jetpack Compose** - For a modern and reactive UI.
+- **Navigation Component** - For smooth screen management.
+- **Android Oreo (API 26+) Compatibility**  
+    📌 Reason: Android Oreo is a stable and widely used version. It ensures compatibility with the majority of devices without sacrificing access to modern features.
+
+---
+
+## 👥 Development Team
 - Asier Juárez
