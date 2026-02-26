@@ -31,11 +31,13 @@ sealed class BottomNavItem(val route: String, val icon: ImageVector, val labelRe
     object Map     : BottomNavItem("map",     Icons.Filled.Map,      R.string.nav_map)
     object AI      : BottomNavItem("ai",      Icons.Filled.Star,       R.string.nav_ai)
     object Profile : BottomNavItem("profile", Icons.Filled.Person,     R.string.nav_profile)
+    object Gallery  : BottomNavItem("trip_photo_list", Icons.Filled.PhotoLibrary, R.string.nav_gallery)
 }
 
 val bottomNavItems = listOf(
     BottomNavItem.Home,
     BottomNavItem.Trips,
+    BottomNavItem.Gallery,
     BottomNavItem.Map,
     BottomNavItem.AI,
     BottomNavItem.Profile
