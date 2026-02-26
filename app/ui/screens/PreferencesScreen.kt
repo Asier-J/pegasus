@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.res.Configuration
-import android.os.Build
 import android.os.LocaleList
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -75,12 +74,7 @@ fun applyLocaleToContext(context: Context, code: String): Context {
     val locale = Locale(code)
     Locale.setDefault(locale)
     val config = Configuration(context.resources.configuration)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        config.setLocales(LocaleList(locale))
-    } else {
-        @Suppress("DEPRECATION")
-        config.locale = locale
-    }
+    config.setLocales(LocaleList(locale))
     return context.createConfigurationContext(config)
 }
 
@@ -122,6 +116,11 @@ fun PreferencesScreen(navController: NavController) {
     var selectedTheme by remember {
         mutableStateOf(if (getSavedTheme(context)) AppTheme.DARK else AppTheme.LIGHT)
     }
+
+    // Notifications — UI only, no real logic
+    var notifAll      by remember { mutableStateOf(true) }
+    var notifTrips    by remember { mutableStateOf(true) }
+    var notifAI       by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) { visible = true }
 
@@ -205,6 +204,29 @@ fun PreferencesScreen(navController: NavController) {
                     }
                 }
 
+                // ── Notifications Card ────────────────────────────────────────
+                PreferenceCard(title = stringResource(id = R.string.preferences_notifications_title)) {
+                    Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
+                        NotifToggleRow(
+                            label    = stringResource(id = R.string.preferences_notifications_all),
+                            checked  = notifAll,
+                            onToggle = { notifAll = it }
+                        )
+                        HorizontalDivider(color = colors.outline.copy(alpha = 0.3f))
+                        NotifToggleRow(
+                            label    = stringResource(id = R.string.preferences_notifications_trips),
+                            checked  = notifTrips,
+                            onToggle = { notifTrips = it }
+                        )
+                        HorizontalDivider(color = colors.outline.copy(alpha = 0.3f))
+                        NotifToggleRow(
+                            label    = stringResource(id = R.string.preferences_notifications_ai),
+                            checked  = notifAI,
+                            onToggle = { notifAI = it }
+                        )
+                    }
+                }
+
                 // ── Info banner ───────────────────────────────────────────────
                 Row(
                     modifier          = Modifier
@@ -212,7 +234,8 @@ fun PreferencesScreen(navController: NavController) {
                         .clip(RoundedCornerShape(10.dp))
                         .background(colors.surface)
                         .padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically) {
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(text = "ℹ️", fontSize = 16.sp)
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
@@ -230,6 +253,35 @@ fun PreferencesScreen(navController: NavController) {
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
+@Composable
+private fun NotifToggleRow(label: String, checked: Boolean, onToggle: (Boolean) -> Unit) {
+    val colors = MaterialTheme.colorScheme
+    Row(
+        modifier              = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment     = Alignment.CenterVertically
+    ) {
+        Text(
+            text     = label,
+            color    = colors.onSurface,
+            fontSize = 14.sp,
+            modifier = Modifier.weight(1f)
+        )
+        Switch(
+            checked         = checked,
+            onCheckedChange = onToggle,
+            colors          = SwitchDefaults.colors(
+                checkedThumbColor   = colors.onPrimary,
+                checkedTrackColor   = colors.primary,
+                uncheckedThumbColor = colors.onSurfaceVariant,
+                uncheckedTrackColor = colors.outline.copy(alpha = 0.4f)
+            )
+        )
+    }
+}
+
 @Composable
 private fun PreferenceCard(
     title: String,

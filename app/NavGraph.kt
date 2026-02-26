@@ -6,15 +6,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navArgument
 import com.example.pegasus.ui.screens.*
 
 @Composable
 fun NavGraph(navController: NavHostController) {
 
-    val bottomNavRoutes = listOf("home", "trips", "map", "ai", "profile")
+    val bottomNavRoutes = listOf("home", "trips",  "trip_photo_list", "map", "ai", "profile")
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -27,9 +29,12 @@ fun NavGraph(navController: NavHostController) {
     ) { innerPadding ->
         NavHost(
             navController    = navController,
-            startDestination = "home",
+            startDestination = "splash",          // ← empieza en splash
             modifier         = Modifier.padding(innerPadding)
         ) {
+            // ── Splash ────────────────────────────────────────────────────────
+            composable("splash") { SplashScreen(navController) }
+
             // ── Bottom nav screens ────────────────────────────────────────────
             composable("home")    { HomeScreen(navController) }
             composable("trips")   { TripListScreen(navController) }
@@ -41,6 +46,13 @@ fun NavGraph(navController: NavHostController) {
             composable("terms")       { TermsAndConditionsScreen(navController) }
             composable("about")       { AboutScreen(navController) }
             composable("preferences") { PreferencesScreen(navController) }
+            composable("trip_photo_list") { TripPhotoListScreen(navController) }
+            composable("trip_gallery/{tripId}",
+                arguments = listOf(navArgument("tripId") { type = NavType.IntType })
+            ) {
+                val tripId = it.arguments?.getInt("tripId") ?: 1
+                TripGalleryScreen(navController, tripId)
+            }
         }
     }
 }

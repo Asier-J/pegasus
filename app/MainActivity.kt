@@ -6,15 +6,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.example.pegasus.ui.screens.applyLocaleToContext
 import com.example.pegasus.ui.screens.getSavedLanguage
 import com.example.pegasus.ui.screens.getSavedTheme
 import com.example.pegasus.ui.theme.PegasusTheme
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
@@ -33,14 +29,6 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        var isChecking = true
-        lifecycleScope.launch {
-            isChecking = false
-        }
-        installSplashScreen().apply {
-            setKeepOnScreenCondition { isChecking }
-        }
 
         setContent {
             PegasusTheme(darkTheme = isDark) {

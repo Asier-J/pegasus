@@ -53,7 +53,6 @@ fun AboutScreen(navController: NavController) {
                 .fillMaxSize()
                 .alpha(alpha)
         ) {
-            // ── Top Bar ──────────────────────────────────────────────────────
             TopAppBar(
                 title = {
                     Text(
@@ -107,7 +106,7 @@ fun AboutScreen(navController: NavController) {
                             .padding(horizontal = 16.dp, vertical = 4.dp)
                     ) {
                         Text(
-                            text       = stringResource(R.string.about_version),
+                            text       = "v.1.0.1",
                             color      = colors.onPrimary,
                             fontSize   = 12.sp,
                             fontWeight = FontWeight.SemiBold
@@ -144,11 +143,11 @@ fun AboutScreen(navController: NavController) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         AboutSectionTitle(text = stringResource(R.string.about_tech_stack_title))
                         Spacer(modifier = Modifier.height(12.dp))
-                        TechItem(stringResource(R.string.about_tech_stack_language),    stringResource(R.string.about_tech_stack_language_value))
-                        TechItem(stringResource(R.string.about_tech_stack_ui_framework),stringResource(R.string.about_tech_stack_ui_framework_value))
-                        TechItem(stringResource(R.string.about_tech_stack_navigation),  stringResource(R.string.about_tech_stack_navigation_value))
-                        TechItem(stringResource(R.string.about_tech_stack_min_sdk),     stringResource(R.string.about_tech_stack_min_sdk_value))
-                        TechItem(stringResource(R.string.about_tech_stack_target_sdk),  stringResource(R.string.about_tech_stack_target_sdk_value))
+                        TechItem(stringResource(R.string.about_tech_stack_language),     stringResource(R.string.about_tech_stack_language_value))
+                        TechItem(stringResource(R.string.about_tech_stack_ui_framework), stringResource(R.string.about_tech_stack_ui_framework_value))
+                        TechItem(stringResource(R.string.about_tech_stack_navigation),   stringResource(R.string.about_tech_stack_navigation_value))
+                        TechItem(stringResource(R.string.about_tech_stack_min_sdk),      stringResource(R.string.about_tech_stack_min_sdk_value))
+                        TechItem(stringResource(R.string.about_tech_stack_target_sdk),   stringResource(R.string.about_tech_stack_target_sdk_value))
                     }
                 }
 
@@ -167,6 +166,29 @@ fun AboutScreen(navController: NavController) {
                                 name = stringResource(R.string.about_team_member_name),
                                 role = stringResource(R.string.about_team_member_role)
                             )
+                        )
+                    }
+                }
+
+                // ── License Card ──────────────────────────────────────────────
+                Card(
+                    modifier  = Modifier.fillMaxWidth(),
+                    shape     = RoundedCornerShape(12.dp),
+                    colors    = CardDefaults.cardColors(containerColor = colors.surface),
+                    elevation = CardDefaults.cardElevation(0.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        AboutSectionTitle(text = stringResource(R.string.about_license_title))
+                        Spacer(modifier = Modifier.height(12.dp))
+                        TechItem(stringResource(R.string.about_license_type_label),   stringResource(R.string.about_license_type_value))
+                        TechItem(stringResource(R.string.about_license_year_label),   stringResource(R.string.about_license_year_value))
+                        TechItem(stringResource(R.string.about_license_holder_label), stringResource(R.string.about_license_holder_value))
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text       = stringResource(R.string.about_license_body),
+                            color      = colors.onSurfaceVariant,
+                            fontSize   = 12.sp,
+                            lineHeight = 18.sp
                         )
                     }
                 }
@@ -211,7 +233,7 @@ private fun TechItem(label: String, value: String) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = label, color = colors.onSurfaceVariant, fontSize = 13.sp)
-        Text(text = value, color = colors.onSurface, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+        Text(text = value, color = colors.onSurface,        fontSize = 13.sp, fontWeight = FontWeight.Medium)
     }
 }
 
