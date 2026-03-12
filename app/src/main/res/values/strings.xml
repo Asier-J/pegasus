@@ -1,0 +1,203 @@
+<resources>
+    <string name="app_name">Pegasus</string>
+    <string name="terms_acceptance_title">1. Acceptance of Terms</string>
+    <string name="terms_acceptance_body">By downloading, installing, or using Pegasus, you agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use the application. We reserve the right to update these terms at any time, and continued use of the app constitutes acceptance of any changes.</string>
+    <string name="terms_use_title">2. Use of the Application</string>
+    <string name="terms_use_body">Pegasus is intended for personal, non-commercial use. You agree to use the app only for lawful purposes and in a manner that does not infringe the rights of others. You must not misuse, reverse-engineer, or attempt to gain unauthorised access to any part of the application or its related systems.</string>
+    <string name="terms_privacy_title">3. User Data &amp; Privacy</string>
+    <string name="terms_privacy_body">We are committed to protecting your privacy. Pegasus collects only the data necessary to provide its services, such as itinerary information and user preferences. We do not sell your personal data to third parties. For full details, please refer to our Privacy Policy.</string>
+    <string name="terms_location_title">4. Location Services</string>
+    <string name="terms_location_body">Certain features of Pegasus, such as nearby place discovery, require access to your device\'s location. Location data is used solely to enhance your in-app experience and is not stored on our servers beyond the active session. You may revoke location permissions at any time via your device settings.</string>
+    <string name="terms_third_party_title">5. Third-Party Services</string>
+    <string name="terms_third_party_body">Pegasus may integrate with third-party services (e.g. maps, points of interest databases). We are not responsible for the content, privacy practices, or availability of these external services. Use of third-party integrations is subject to their respective terms and conditions.</string>
+    <string name="terms_ip_title">6. Intellectual Property</string>
+    <string name="terms_ip_body">All content, branding, graphics, and code within Pegasus are the intellectual property of the Pegasus development team unless otherwise stated. You may not reproduce, distribute, or create derivative works from any part of the application without prior written consent.</string>
+    <string name="terms_disclaimer_title">7. Disclaimer of Warranties</string>
+    <string name="terms_disclaimer_body">Pegasus is provided on an "as is" and "as available" basis without warranties of any kind, either express or implied. We do not guarantee that the app will be error-free, uninterrupted, or that any defects will be corrected. Travel information provided is for guidance only — always verify with official sources.</string>
+    <string name="terms_liability_title">8. Limitation of Liability</string>
+    <string name="terms_liability_body">To the maximum extent permitted by law, the Pegasus team shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the application, including but not limited to loss of data, travel disruptions, or reliance on app-generated itineraries.</string>
+    <string name="terms_changes_title">9. Changes to the Service</string>
+    <string name="terms_changes_body">We reserve the right to modify, suspend, or discontinue any part of Pegasus at any time without notice. We shall not be liable to you or any third party for any such modification, suspension, or discontinuation.</string>
+    <string name="terms_governing_law_title">10. Governing Law</string>
+    <string name="terms_governing_law_body">These Terms and Conditions shall be governed by and construed in accordance with applicable law. Any disputes arising from the use of Pegasus shall be subject to the exclusive jurisdiction of the relevant courts.</string>
+
+    <string name="about_title">About</string>
+    <string name="about_back_button_description">Back</string>
+    <string name="about_app_name">Pegasus</string>
+    <string name="about_version">v0.1.0</string>
+    <string name="about_summary_title">About the App</string>
+    <string name="about_summary_body">Pegasus is a travel planning app that gives you wings to explore the world. Organize your itineraries, discover extraordinary places, and fly toward your next adventure without worries. Built with Kotlin and Jetpack Compose.</string>
+    <string name="about_tech_stack_title">Tech Stack</string>
+    <string name="about_tech_stack_language">Language</string>
+    <string name="about_tech_stack_language_value">Kotlin</string>
+    <string name="about_tech_stack_ui_framework">UI Framework</string>
+    <string name="about_tech_stack_ui_framework_value">Jetpack Compose</string>
+    <string name="about_tech_stack_navigation">Navigation</string>
+    <string name="about_tech_stack_navigation_value">Navigation Component</string>
+    <string name="about_tech_stack_min_sdk">Min SDK</string>
+    <string name="about_tech_stack_min_sdk_value">Android 8.0 (API 26)</string>
+    <string name="about_tech_stack_target_sdk">Target SDK</string>
+    <string name="about_tech_stack_target_sdk_value">Android 16 (API 36)</string>
+    <string name="about_team_title">Development Team</string>
+    <string name="about_team_member_name">Asier Juárez</string>
+    <string name="about_team_member_role">Lead Developer</string>
+    <string name="about_footer">© 2026 Pegasus. All rights reserved.</string>
+
+    <string name="home_app_title">PEGASUS</string>
+    <string name="home_app_subtitle">Your travel companion</string>
+    <string name="home_app_description">Organize your itineraries,\ndiscover extraordinary places.</string>
+    <string name="home_terms_button">Terms &amp; Conditions</string>
+    <string name="home_about_button">About</string>
+    <string name="home_settings_button_description">Settings</string>
+
+    <string name="terms_title">Terms &amp; Conditions</string>
+    <string name="terms_last_updated">Last updated: February 2026</string>
+    <string name="terms_intro">Please read these terms carefully before using the app. By using Pegasus, you agree to the following conditions.</string>
+    <string name="terms_footer">© 2026 Pegasus. All rights reserved.</string>
+    <string name="back_button_description">Back</string>
+
+    <string name="preferences_title">Preferences</string>
+    <string name="preferences_language_title">Language</string>
+    <string name="preferences_theme_title">Theme</string>
+    <string name="preferences_info_banner">Changes take effect immediately and are saved across sessions.</string>
+    <string name="preferences_back_button_description">Back</string>
+    <string name="preferences_theme_dark">Dark</string>
+    <string name="preferences_theme_light">Light</string>
+
+    <string name="trip_list_title">My Trips</string>
+    <string name="trip_list_new_trip_description">New Trip</string>
+    <string name="trip_list_stat_total">Total</string>
+    <string name="trip_list_stat_planned">Planned</string>
+    <string name="trip_list_stat_completed">Completed</string>
+    <string name="trip_list_status_planned">Planned</string>
+    <string name="trip_list_status_completed">Completed</string>
+    <string name="trip_list_budget_format">€%1$d / €%2$d</string>
+
+    <string name="profile_title">Profile</string>
+    <string name="profile_stat_trips">Trips</string>
+    <string name="profile_stat_countries">Countries</string>
+    <string name="profile_stat_km">km</string>
+    <string name="profile_section_settings">Settings</string>
+    <string name="profile_row_preferences">Preferences</string>
+    <string name="profile_row_preferences_sub">Language, theme &amp; more</string>
+    <string name="profile_section_app">App</string>
+    <string name="profile_row_about">About</string>
+    <string name="profile_row_about_sub">Version, team &amp; tech stack</string>
+    <string name="profile_row_terms">Terms &amp; Conditions</string>
+    <string name="profile_row_terms_sub">Legal information</string>
+    <string name="profile_section_account">Account</string>
+    <string name="profile_row_logout">Log out</string>
+    <string name="profile_row_logout_sub">Sign out of your account</string>
+
+    <string name="map_title">Map</string>
+    <string name="map_placeholder_title">Map coming soon</string>
+    <string name="map_locations_header">Your Locations</string>
+    <string name="map_status_visited">Visited</string>
+    <string name="map_status_planned">Planned</string>
+
+    <string name="ai_rec_title">AI Recommendations</string>
+    <string name="ai_rec_prompt_placeholder">Ask for a recommendation...</string>
+    <string name="ai_rec_generate_description">Generate</string>
+    <string name="ai_rec_dismiss_description">Dismiss</string>
+    <string name="ai_rec_save_description">Save</string>
+    <string name="ai_rec_status_saved">Saved</string>
+    <string name="ai_rec_status_save">Save</string>
+    <string name="ai_rec_button_add">Add to trip</string>
+
+    <string-array name="home_greetings">
+        <item>Ready for your next adventure? 🌍</item>
+        <item>Where to next? ✈️</item>
+        <item>The world is waiting for you 🗺️</item>
+        <item>Let\'s plan something amazing 🐴</item>
+        <item>Bon voyage! 🌟</item>
+    </string-array>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_trips">Trips</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_ai">AI</string>
+    <string name="nav_profile">Profile</string>
+
+    <string name="rec_1_title">Ichiran Ramen Shibuya</string>
+    <string name="rec_1_desc">One of Tokyo\'s most iconic ramen chains. Solo dining booths for a unique experience.</string>
+    <string name="rec_1_trip">Tokyo Adventure</string>
+    <string name="rec_2_title">Shinjuku Gyoen National Garden</string>
+    <string name="rec_2_desc">Perfect for cherry blossom season. Best visited early morning to avoid crowds.</string>
+    <string name="rec_3_title">Hôtel du Louvre</string>
+    <string name="rec_3_desc">Historic Parisian hotel steps away from the Louvre. Stunning views of the city.</string>
+    <string name="rec_3_trip">Paris Getaway</string>
+    <string name="rec_4_title">Skip-the-line Eiffel Tower</string>
+    <string name="rec_4_desc">Book tickets 2 months in advance. Sunset visit recommended for best views.</string>
+    <string name="rec_5_title">Pizzarium Bonci</string>
+    <string name="rec_5_desc">Rome\'s best pizza al taglio. Small spot near the Vatican — worth the queue.</string>
+    <string name="rec_5_trip">Rome &amp; Florence</string>
+
+    <string name="todo_trip_create">Trip creation coming soon</string>
+    <string name="todo_trip_detail">Trip details coming soon</string>
+    <string name="todo_map_sdk">Integrate Google Maps SDK</string>
+
+    <string name="loc_tokyo">Tokyo</string>
+    <string name="loc_paris">Paris</string>
+    <string name="loc_nyc">New York</string>
+    <string name="loc_bali">Bali</string>
+    <string name="loc_rome">Rome</string>
+    <string name="loc_barcelona">Barcelona</string>
+
+    <string name="country_japan">Japan</string>
+    <string name="country_france">France</string>
+    <string name="country_usa">USA</string>
+    <string name="country_indonesia">Indonesia</string>
+    <string name="country_italy">Italy</string>
+    <string name="country_spain">Spain</string>
+
+    <string name="trip_1_title">Tokyo Adventure</string>
+    <string name="trip_1_dest">Tokyo, Japan</string>
+    <string name="trip_1_dates">Mar 10 – Mar 20, 2026</string>
+    <string name="trip_2_title">Paris Getaway</string>
+    <string name="trip_2_dest">Paris, France</string>
+    <string name="trip_2_dates">Apr 5 – Apr 12, 2026</string>
+    <string name="trip_3_title">NYC Weekend</string>
+    <string name="trip_3_dest">New York, USA</string>
+    <string name="trip_3_dates">Jan 15 – Jan 18, 2026</string>
+    <string name="trip_4_title">Bali Escape</string>
+    <string name="trip_4_dest">Bali, Indonesia</string>
+    <string name="trip_4_dates">Feb 1 – Feb 10, 2026</string>
+    <string name="trip_5_title">Rome &amp; Florence</string>
+    <string name="trip_5_dest">Italy</string>
+    <string name="trip_5_dates">May 20 – Jun 1, 2026</string>
+
+    <string name="preferences_notifications_title">Notifications</string>
+    <string name="preferences_notifications_all">All Notifications</string>
+    <string name="preferences_notifications_trips">Trip Updates</string>
+    <string name="preferences_notifications_ai">AI Recommendations</string>
+
+    <string name="nav_gallery">Photos</string>
+
+    <string name="about_version_format">v.%1$s</string>
+    <string name="about_license_title">License</string>
+    <string name="about_license_type_label">Type</string>
+    <string name="about_license_type_value">GPL-3.0 License</string>
+    <string name="about_license_year_label">Year</string>
+    <string name="about_license_year_value">2026</string>
+    <string name="about_license_holder_label">Holder</string>
+    <string name="about_license_holder_value">Pegasus Team</string>
+    <string name="about_license_body">Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files.</string>
+
+    <string name="trip_summer_japan">Summer in Japan</string>
+    <string name="trip_japan_cities">Tokyo, Kyoto, Osaka</string>
+    <string name="trip_balkan_road">Balkan Road Trip</string>
+    <string name="trip_balkan_countries">Croatia, Bosnia, Montenegro</string>
+    <string name="trip_pyrenees_hiking">Pyrenees Hiking</string>
+    <string name="trip_pyrenees_locations">Andorra, Lleida</string>
+
+    <string name="gallery_default_title">Gallery</string>
+    <string name="gallery_back_button">Back</string>
+    <string name="gallery_add_photo">Add Photo</string>
+    <string name="gallery_no_photos">No photos yet</string>
+    <string name="gallery_add_first_photo_hint">Tap + to add your first photo</string>
+    <string name="gallery_photo_count_singular">1 photo</string>
+    <string name="gallery_photo_count_plural">%1$d photos</string>
+    <string name="gallery_delete_photo">Delete photo</string>
+    <string name="gallery_list_title">Trip Gallery</string>
+    <string name="gallery_list_new_trip">New Trip</string>
+</resources>

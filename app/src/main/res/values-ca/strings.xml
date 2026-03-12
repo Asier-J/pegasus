@@ -1,0 +1,202 @@
+<resources>
+    <string name="app_name">Pegasus</string>
+    <string name="terms_acceptance_title">1. Acceptació dels Termes</string>
+    <string name="terms_acceptance_body">En descarregar, instal·lar o utilitzar Pegasus, acceptes estar subjecte a aquests Termes i Condicions. Si no estàs d\'acord amb aquests termes, si us plau, no utilitzis l\'aplicació. Ens reservem el dret d\'actualitzar aquests termes en qualsevol moment, i l\'ús continuat de l\'aplicació constitueix l\'acceptació de qualsevol canvi.</string>
+    <string name="terms_use_title">2. Ús de l\'Aplicació</string>
+    <string name="terms_use_body">Pegasus està destinat a un ús personal i no comercial. Acceptes utilitzar l\'aplicació només amb finalitats lícites i de manera que no infringeixi els drets d\'altres. No has de fer un mal ús, aplicar enginyeria inversa o intentar obtenir accés no autoritzat a cap part de l\'aplicació o els seus sistemes relacionats.</string>
+    <string name="terms_privacy_title">3. Dades de l\'Usuari i Privacitat</string>
+    <string name="terms_privacy_body">Ens comprometem a protegir la teva privacitat. Pegasus només recopila les dades necessàries per a proporcionar els seus serveis, com ara informació d\'itineraris i preferències de l\'usuari. No venem les teves dades personals a tercers. Per a més detalls, consulta la nostra Política de Privacitat.</string>
+    <string name="terms_location_title">4. Serveis de Localització</string>
+    <string name="terms_location_body">Certes funcions de Pegasus, com el descobriment de llocs propers, requereixen accés a la ubicació del teu dispositiu. Les dades de localització s\'utilitzen únicament per a millorar la teva experiència a l\'aplicació i no s\'emmagatzemen als nostres servidors més i més de la sessió activa. Pots revocar els permisos de localització en qualsevol moment a través de la configuració del teu dispositiu.</string>
+    <string name="terms_third_party_title">5. Serveis de Tercers</string>
+    <string name="terms_third_party_body">Pegasus pot integrar-se amb serveis de tercers (per exemple, mapes, bases de dades de punts d\'interès). No som responsables del contingut, les pràctiques de privacitat o la disponibilitat d\'aquests serveis externs. L\'ús d\'integracions de tercers està subjecte als seus respectius termes i condicions.</string>
+    <string name="terms_ip_title">6. Propietat Intel·lectual</string>
+    <string name="terms_ip_body">Tot el contingut, la marca, els gràfics i el codi de Pegasus són propietat intel·lectual de l\'equip de desenvolupament de Pegasus, tret que s\'indiqui el contrari. No pots reproduir, distribuir ni crear obres derivades de cap part de l\'aplicació sense un consentiment previ per escrit.</string>
+    <string name="terms_disclaimer_title">7. Exclusió de Garanties</string>
+    <string name="terms_disclaimer_body">Pegasus es proporciona \"tal qual\" i \"segons disponibilitat\" sense garanties de cap tipus, ja siguin expresses o implícites. No garantim que l\'aplicació estigui lliure d\'errors, sigui ininterrompuda o que es corregeixi qualsevol defecte. La informació de viatge proporcionada és només orientativa; verifica sempre amb fonts oficials.</string>
+    <string name="terms_liability_title">8. Limitació de Responsabilitat</string>
+    <string name="terms_liability_body">En la màxima mesura permesa per la llei, l\'equip de Pegasus no serà responsable de cap dany indirecte, incidental, especial o conseqüent que sorgeixi de l\'ús de l\'aplicació, inclosos, entre d\'altres, la pèrdua de dades, les interrupcions de viatge o la confiança en els itineraris generats per l\'aplicació.</string>
+    <string name="terms_changes_title">9. Canvis en el Servei</string>
+    <string name="terms_changes_body">Ens reservem el dret de modificar, suspendre o interrompre qualsevol part de Pegasus en qualsevol moment i sense previ avís. No serem responsables davant teu ni de cap tercer per aquesta modificació, suspensió o interrupció.</string>
+    <string name="terms_governing_law_title">10. Llei Aplicable</string>
+    <string name="terms_governing_law_body">Aquests Termes i Condicions es regiran i interpretaran d\'acord amb la llei aplicable. Qualsevol disputa que sorgeixi de l\'ús de Pegasus estarà subjecta a la jurisdicció exclusiva dels tribunals pertinents.</string>
+
+    <string name="about_title">Quant a</string>
+    <string name="about_back_button_description">Enrere</string>
+    <string name="about_app_name">Pegasus</string>
+    <string name="about_version">v0.1.0</string>
+    <string name="about_summary_title">Quant a l\'App</string>
+    <string name="about_summary_body">Pegasus és una app de planificació de viatges que et dóna ales per a explorar el món. Organitza els teus itineraris, descobreix llocs extraordinaris i vola cap a la teva propera aventura sense preocupacions. Creada amb Kotlin i Jetpack Compose.</string>
+    <string name="about_tech_stack_title">Tecnologies Utilitzades</string>
+    <string name="about_tech_stack_language">Llenguatge</string>
+    <string name="about_tech_stack_language_value">Kotlin</string>
+    <string name="about_tech_stack_ui_framework">Framework d\'UI</string>
+    <string name="about_tech_stack_ui_framework_value">Jetpack Compose</string>
+    <string name="about_tech_stack_navigation">Navegació</string>
+    <string name="about_tech_stack_navigation_value">Navigation Component</string>
+    <string name="about_tech_stack_min_sdk">SDK Mínim</string>
+    <string name="about_tech_stack_min_sdk_value">Android 8.0 (API 26)</string>
+    <string name="about_tech_stack_target_sdk">SDK de Destí</string>
+    <string name="about_tech_stack_target_sdk_value">Android 16 (API 36)</string>
+    <string name="about_team_title">Equip de Desenvolupament</string>
+    <string name="about_team_member_name">Asier Juárez</string>
+    <string name="about_team_member_role">Desenvolupador Principal</string>
+    <string name="about_footer">© 2026 Pegasus. Tots els drets reservats.</string>
+
+    <string name="home_app_title">PEGASUS</string>
+    <string name="home_app_subtitle">El teu company de viatge</string>
+    <string name="home_app_description">Organitza els teus itineraris,\ndescobreix llocs extraordinaris.</string>
+    <string name="home_terms_button">Termes i Condicions</string>
+    <string name="home_about_button">Quant a</string>
+    <string name="home_settings_button_description">Preferències</string>
+
+    <string name="terms_title">Termes i Condicions</string>
+    <string name="terms_last_updated">Última actualització: Febrer 2026</string>
+    <string name="terms_intro">Si us plau, llegeix aquests termes amb atenció abans d\'utilitzar l\'app. En utilitzar Pegasus, acceptes les següents condicions.</string>
+    <string name="terms_footer">© 2026 Pegasus. Tots els drets reservats.</string>
+    <string name="back_button_description">Enrere</string>
+
+    <string name="preferences_title">Preferències</string>
+    <string name="preferences_language_title">Idioma</string>
+    <string name="preferences_theme_title">Tema</string>
+    <string name="preferences_info_banner">Els canvis s\'apliquen immediatament i es guarden entre sessions.</string>
+    <string name="preferences_back_button_description">Enrere</string>
+    <string name="preferences_theme_dark">Fosc</string>
+    <string name="preferences_theme_light">Clar</string>
+
+    <string name="trip_list_title">Els Meus Viatges</string>
+    <string name="trip_list_new_trip_description">Nou Viatge</string>
+    <string name="trip_list_stat_total">Total</string>
+    <string name="trip_list_stat_planned">Planificats</string>
+    <string name="trip_list_stat_completed">Completats</string>
+    <string name="trip_list_status_planned">Planificat</string>
+    <string name="trip_list_status_completed">Completat</string>
+    <string name="trip_list_budget_format">€%1$d / €%2$d</string>
+
+    <string name="profile_title">Perfil</string>
+    <string name="profile_stat_trips">Viatges</string>
+    <string name="profile_stat_countries">Països</string>
+    <string name="profile_stat_km">km</string>
+    <string name="profile_section_settings">Configuració</string>
+    <string name="profile_row_preferences">Preferències</string>
+    <string name="profile_row_preferences_sub">Idioma, tema i més</string>
+    <string name="profile_section_app">App</string>
+    <string name="profile_row_about">Quant a</string>
+    <string name="profile_row_about_sub">Versió, equip i tecnologies</string>
+    <string name="profile_row_terms">Termes i Condicions</string>
+    <string name="profile_row_terms_sub">Informació legal</string>
+    <string name="profile_section_account">Compte</string>
+    <string name="profile_row_logout">Tancar sessió</string>
+    <string name="profile_row_logout_sub">Sortir del teu compte</string>
+
+    <string name="map_title">Mapa</string>
+    <string name="map_placeholder_title">Mapa disponible properament</string>
+    <string name="map_locations_header">Les teves ubicacions</string>
+    <string name="map_status_visited">Visitat</string>
+    <string name="map_status_planned">Planificat</string>
+
+    <string name="ai_rec_title">Recomanacions IA</string>
+    <string name="ai_rec_prompt_placeholder">Demana una recomanació...</string>
+    <string name="ai_rec_generate_description">Generar</string>
+    <string name="ai_rec_dismiss_description">Descartar</string>
+    <string name="ai_rec_save_description">Desar</string>
+    <string name="ai_rec_status_saved">Desat</string>
+    <string name="ai_rec_status_save">Desar</string>
+    <string name="ai_rec_button_add">Afegir al viatge</string>
+
+    <string-array name="home_greetings">
+        <item>Llest per a la teva propera aventura? 🌍</item>
+        <item>On anem ara? ✈️</item>
+        <item>El món t\'està esperant 🗺️</item>
+        <item>Planegem alguna cosa increïble 🐴</item>
+        <item>Bon viatge! 🌟</item>
+    </string-array>
+
+    <string name="nav_home">Inici</string>
+    <string name="nav_trips">Viatges</string>
+    <string name="nav_map">Mapa</string>
+    <string name="nav_ai">IA</string>
+    <string name="nav_profile">Perfil</string>
+
+    <string name="rec_1_title">Ichiran Ramen Shibuya</string>
+    <string name="rec_1_desc">Una de les cadenes de ramen més icòniques de Tòquio. Cabines individuals per a una experiència única.</string>
+    <string name="rec_1_trip">Aventura a Tòquio</string>
+    <string name="rec_2_title">Jardí Nacional Shinjuku Gyoen</string>
+    <string name="rec_2_desc">Perfecte per a la temporada dels cirerers en flor. Es recomana visitar d\'hora al matí per evitar multituds.</string>
+    <string name="rec_3_title">Hôtel du Louvre</string>
+    <string name="rec_3_desc">Històric hotel parisià a pocs passos del Louvre. Impressionants vistes de la ciutat.</string>
+    <string name="rec_3_trip">Escapada a París</string>
+    <string name="rec_4_title">Torre Eiffel sense cues</string>
+    <string name="rec_4_desc">Reserva entrades amb 2 mesos d\'antelació. Es recomana visitar al capvespre per gaudir de les millors vistes.</string>
+    <string name="rec_5_title">Pizzarium Bonci</string>
+    <string name="rec_5_desc">La millor pizza al tall de Roma. Un lloc petit a prop del Vaticà; val la pena fer cua.</string>
+    <string name="rec_5_trip">Roma i Florència</string>
+
+    <string name="todo_trip_create">Creació de viatges properament</string>
+    <string name="todo_trip_detail">Detalls del viatge properament</string>
+    <string name="todo_map_sdk">Integrar Google Maps SDK</string>
+
+    <string name="loc_tokyo">Tòquio</string>
+    <string name="loc_paris">París</string>
+    <string name="loc_nyc">Nova York</string>
+    <string name="loc_bali">Bali</string>
+    <string name="loc_rome">Roma</string>
+    <string name="loc_barcelona">Barcelona</string>
+
+    <string name="country_japan">Japó</string>
+    <string name="country_france">França</string>
+    <string name="country_usa">EUA</string>
+    <string name="country_indonesia">Indonèsia</string>
+    <string name="country_italy">Itàlia</string>
+    <string name="country_spain">Espanya</string>
+
+    <string name="trip_1_title">Aventura a Tòquio</string>
+    <string name="trip_1_dest">Tòquio, Japó</string>
+    <string name="trip_1_dates">10 mar – 20 mar, 2026</string>
+    <string name="trip_2_title">Escapada a París</string>
+    <string name="trip_2_dest">París, França</string>
+    <string name="trip_2_dates">5 abr – 12 abr, 2026</string>
+    <string name="trip_3_title">Cap de setmana a NYC</string>
+    <string name="trip_3_dest">Nova York, EUA</string>
+    <string name="trip_3_dates">15 gen – 18 gen, 2026</string>
+    <string name="trip_4_title">Escapada a Bali</string>
+    <string name="trip_4_dest">Bali, Indonèsia</string>
+    <string name="trip_4_dates">1 feb – 10 feb, 2026</string>
+    <string name="trip_5_title">Roma i Florència</string>
+    <string name="trip_5_dest">Itàlia</string>
+    <string name="trip_5_dates">20 mai – 1 jun, 2026</string>
+
+    <string name="preferences_notifications_title">Notificacions</string>
+    <string name="preferences_notifications_all">Totes les notificacions</string>
+    <string name="preferences_notifications_trips">Actualitzacions del viatge</string>
+    <string name="preferences_notifications_ai">Recomanacions IA</string>
+
+    <string name="nav_gallery">Fotos</string>
+    <string name="about_version_format">v.%1$s</string>
+    <string name="about_license_title">Llicència</string>
+    <string name="about_license_type_label">Tipus</string>
+    <string name="about_license_type_value">Llicència GPL-3.0</string>
+    <string name="about_license_year_label">Any</string>
+    <string name="about_license_year_value">2026</string>
+    <string name="about_license_holder_label">Titular</string>
+    <string name="about_license_holder_value">Equip Pegasus</string>
+    <string name="about_license_body">Per la present es concedeix permís, de forma gratuïta, a qualsevol persona que obtingui una còpia d\'aquest programari i dels fitxers de documentació associats.</string>
+
+    <string name="trip_summer_japan">Estiu al Japó</string>
+    <string name="trip_japan_cities">Tòquio, Kyoto, Osaka</string>
+    <string name="trip_balkan_road">Ruta pels Balcans</string>
+    <string name="trip_balkan_countries">Croàcia, Bòsnia, Montenegro</string>
+    <string name="trip_pyrenees_hiking">Senderisme als Pirineus</string>
+    <string name="trip_pyrenees_locations">Andorra, Lleida</string>
+
+    <string name="gallery_default_title">Galeria</string>
+    <string name="gallery_back_button">Enrere</string>
+    <string name="gallery_add_photo">Afegir foto</string>
+    <string name="gallery_no_photos">Encara no hi ha fotos</string>
+    <string name="gallery_add_first_photo_hint">Toca + per afegir la teva primera foto</string>
+    <string name="gallery_photo_count_singular">1 foto</string>
+    <string name="gallery_photo_count_plural">%1$d fotos</string>
+    <string name="gallery_delete_photo">Eliminar foto</string>
+    <string name="gallery_list_title">Galeria de viatges</string>
+    <string name="gallery_list_new_trip">Nou viatge</string>
+</resources>
