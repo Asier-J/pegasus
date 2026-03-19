@@ -106,7 +106,7 @@ fun AboutScreen(navController: NavController) {
                             .padding(horizontal = 16.dp, vertical = 4.dp)
                     ) {
                         Text(
-                            text       = "v.1.0.1",
+                            text       = stringResource(R.string.about_version),
                             color      = colors.onPrimary,
                             fontSize   = 12.sp,
                             fontWeight = FontWeight.SemiBold
