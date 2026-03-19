@@ -131,3 +131,4 @@ The updated diagram is available at `docs/domain_model.png`.
 - Data is **not persistent** between app restarts (by design — InMemory only for Sprint 02).
 - `FakeTripDataSource.clearAll()` is only for unit testing; not exposed in production.
 - Deleting a trip also cascades and removes all its activities.
+- The evidence video (`evidence.webm`, 216 MB) exceeds GitHub's 100 MB file size limit and could not be pushed directly. The video was compressed into a zip archive (`evidence.zip`) before being committed. GitHub Large File Storage (LFS) would be the proper long-term solution.
