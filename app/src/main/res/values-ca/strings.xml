@@ -24,7 +24,7 @@
     <string name="about_title">Quant a</string>
     <string name="about_back_button_description">Enrere</string>
     <string name="about_app_name">Pegasus</string>
-    <string name="about_version">v0.1.0</string>
+    <string name="about_version">v2.0.0</string>
     <string name="about_summary_title">Quant a l\'App</string>
     <string name="about_summary_body">Pegasus és una app de planificació de viatges que et dóna ales per a explorar el món. Organitza els teus itineraris, descobreix llocs extraordinaris i vola cap a la teva propera aventura sense preocupacions. Creada amb Kotlin i Jetpack Compose.</string>
     <string name="about_tech_stack_title">Tecnologies Utilitzades</string>
@@ -199,4 +199,75 @@
     <string name="gallery_delete_photo">Eliminar foto</string>
     <string name="gallery_list_title">Galeria de viatges</string>
     <string name="gallery_list_new_trip">Nou viatge</string>
+
+    <!-- Sprint 02 – Trip CRUD -->
+    <string name="add_trip_screen_title">Nou viatge</string>
+    <string name="edit_trip_screen_title">Editar viatge</string>
+    <string name="trip_field_title">Títol *</string>
+    <string name="trip_field_start_date">Data d\'inici *</string>
+    <string name="trip_field_end_date">Data de fi *</string>
+    <string name="trip_field_description">Descripció *</string>
+    <string name="save_button">Desa</string>
+    <string name="cancel_button">Cancel·la</string>
+    <string name="error_title_empty">El títol no pot estar buit</string>
+    <string name="error_start_date_empty">Selecciona una data d\'inici</string>
+    <string name="error_end_date_empty">Selecciona una data de fi</string>
+    <string name="error_description_empty">La descripció no pot estar buida</string>
+    <string name="error_date_order">La data d\'inici ha de ser anterior o igual a la de fi</string>
+
+    <!-- Sprint 02 – Trip detail -->
+    <string name="trip_detail_activities_header">Activitats</string>
+    <string name="trip_detail_no_activities">Sense activitats. Prem + per afegir-ne.</string>
+    <string name="trip_detail_edit_trip">Editar viatge</string>
+    <string name="trip_detail_delete_trip">Eliminar viatge</string>
+    <string name="trip_delete_confirm_title">Eliminar viatge</string>
+    <string name="trip_delete_confirm_message">Estàs segur que vols eliminar aquest viatge i totes les seves activitats?</string>
+
+    <!-- Sprint 02 – Activity CRUD -->
+    <string name="add_activity_screen_title">Nova activitat</string>
+    <string name="edit_activity_screen_title">Editar activitat</string>
+    <string name="activity_field_title">Títol *</string>
+    <string name="activity_field_description">Descripció</string>
+    <string name="activity_field_date">Data *</string>
+    <string name="activity_field_time">Hora *</string>
+    <string name="error_activity_title_empty">El títol de l\'activitat no pot estar buit</string>
+    <string name="error_activity_date_empty">Selecciona una data per a l\'activitat</string>
+    <string name="error_activity_time_empty">Selecciona una hora per a l\'activitat</string>
+    <string name="error_activity_date_out_of_range">La data ha d\'estar dins del rang del viatge</string>
+    <string name="activity_delete_confirm_title">Eliminar activitat</string>
+    <string name="activity_delete_confirm_message">Estàs segur que vols eliminar aquesta activitat?</string>
+
+    <!-- Sprint 02 – User settings -->
+    <string name="settings_section_title">Configuració d\'usuari</string>
+    <string name="settings_username">Nom d\'usuari</string>
+    <string name="settings_dob">Data de naixement</string>
+    <string name="settings_select_date">Seleccionar data</string>
+
+    <!-- Sprint 02 – Common -->
+    <string name="confirm_delete">Eliminar</string>
+    <string name="back_button">Tornar</string>
+
+    <!-- Sprint 02 – Trip list extras -->
+    <string name="trip_list_stat_upcoming">Pròxims</string>
+    <string name="trip_list_empty_title">Sense viatges encara</string>
+    <string name="trip_list_empty_hint">Prem + per crear el teu primer viatge</string>
+
+    <!-- Sprint 02 – Trip detail extras -->
+    <string name="trip_detail_title_fallback">Detall del viatge</string>
+    <string name="trip_detail_not_found">Viatge no trobat</string>
+    <string name="trip_detail_activities_count">Activitats (%1$d)</string>
+    <string name="trip_detail_back_description">Tornar</string>
+    <string name="edit_trip_icon_description">Editar viatge</string>
+    <string name="delete_trip_icon_description">Eliminar viatge</string>
+    <string name="add_activity_fab_description">Afegir activitat</string>
+    <string name="edit_activity_icon_description">Editar activitat</string>
+    <string name="delete_activity_icon_description">Eliminar activitat</string>
+    <string name="activity_delete_confirm_message_format">Estàs segur que vols eliminar \"%1$s\"?</string>
+
+    <!-- Sprint 02 – Form field icon descriptions -->
+    <string name="select_start_date_description">Seleccionar data d\'inici</string>
+    <string name="select_end_date_description">Seleccionar data de fi</string>
+    <string name="select_date_description">Seleccionar data</string>
+    <string name="select_time_description">Seleccionar hora</string>
+    <string name="time_picker_title">Selecciona una hora</string>
 </resources>

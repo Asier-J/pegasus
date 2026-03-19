@@ -17,6 +17,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.DateRange
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -47,9 +51,11 @@ enum class AppTheme(val labelResId: Int, val icon: String) {
 }
 
 // ─── SharedPreferences helpers ────────────────────────────────────────────────
-private const val PREFS_NAME   = "app_prefs"
-private const val KEY_LANGUAGE = "language_code"
-private const val KEY_THEME    = "theme_dark"
+private const val PREFS_NAME    = "app_prefs"
+private const val KEY_LANGUAGE  = "language_code"
+private const val KEY_THEME     = "theme_dark"
+private const val KEY_USERNAME  = "username"
+private const val KEY_DOB       = "date_of_birth"
 
 fun saveLanguage(context: Context, code: String) {
     context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -68,6 +74,24 @@ fun saveTheme(context: Context, isDark: Boolean) {
 fun getSavedTheme(context: Context): Boolean =
     context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         .getBoolean(KEY_THEME, true)
+
+fun saveUsername(context: Context, username: String) {
+    context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        .edit().putString(KEY_USERNAME, username).apply()
+}
+
+fun getSavedUsername(context: Context): String =
+    context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        .getString(KEY_USERNAME, "") ?: ""
+
+fun saveDateOfBirth(context: Context, dob: String) {
+    context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        .edit().putString(KEY_DOB, dob).apply()
+}
+
+fun getSavedDateOfBirth(context: Context): String =
+    context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        .getString(KEY_DOB, "") ?: ""
 
 // ─── Locale application ───────────────────────────────────────────────────────
 fun applyLocaleToContext(context: Context, code: String): Context {
@@ -117,12 +141,41 @@ fun PreferencesScreen(navController: NavController) {
         mutableStateOf(if (getSavedTheme(context)) AppTheme.DARK else AppTheme.LIGHT)
     }
 
+    // User settings
+    var username by remember { mutableStateOf(getSavedUsername(context)) }
+    var dateOfBirth by remember { mutableStateOf(getSavedDateOfBirth(context)) }
+    var showDobPicker by remember { mutableStateOf(false) }
+
     // Notifications — UI only, no real logic
     var notifAll      by remember { mutableStateOf(true) }
     var notifTrips    by remember { mutableStateOf(true) }
     var notifAI       by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) { visible = true }
+
+    // ── Date of Birth picker dialog ────────────────────────────────────────────
+    val dobPickerState = rememberDatePickerState()
+    val dobFormatter   = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    if (showDobPicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDobPicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    dobPickerState.selectedDateMillis?.let { millis ->
+                        val date = Instant.ofEpochMilli(millis)
+                            .atZone(ZoneOffset.UTC)
+                            .toLocalDate()
+                        dateOfBirth = date.format(dobFormatter)
+                        saveDateOfBirth(context, dateOfBirth)
+                    }
+                    showDobPicker = false
+                }) { Text(stringResource(id = R.string.save_button)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDobPicker = false }) { Text(stringResource(id = R.string.cancel_button)) }
+            }
+        ) { DatePicker(state = dobPickerState) }
+    }
 
     Box(
         modifier = Modifier
@@ -162,6 +215,41 @@ fun PreferencesScreen(navController: NavController) {
                     .padding(horizontal = 20.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                // ── User Settings Card ────────────────────────────────────────
+                PreferenceCard(title = stringResource(id = R.string.settings_section_title)) {
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        // Username field
+                        OutlinedTextField(
+                            value         = username,
+                            onValueChange = {
+                                username = it
+                                saveUsername(context, it)
+                            },
+                            label      = { Text(stringResource(id = R.string.settings_username)) },
+                            singleLine = true,
+                            modifier   = Modifier.fillMaxWidth()
+                        )
+                        // Date of Birth (read-only, DatePicker)
+                        OutlinedTextField(
+                            value         = dateOfBirth,
+                            onValueChange = {},
+                            label         = { Text(stringResource(id = R.string.settings_dob)) },
+                            readOnly      = true,
+                            singleLine    = true,
+                            modifier      = Modifier.fillMaxWidth(),
+                            trailingIcon  = {
+                                IconButton(onClick = { showDobPicker = true }) {
+                                    Icon(
+                                        imageVector        = Icons.Filled.DateRange,
+                                        contentDescription = stringResource(id = R.string.settings_select_date),
+                                        tint               = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
+                        )
+                    }
+                }
+
                 // ── Language Card ─────────────────────────────────────────────
                 PreferenceCard(title = stringResource(id = R.string.preferences_language_title)) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
