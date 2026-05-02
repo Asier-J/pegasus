@@ -1,0 +1,55 @@
+# ───────────────────────────────────────────────────────────────────────────────
+# Pegasus — Sprint 03 .gitignore
+# Standard Android Studio + Firebase + JetBrains setup.
+# ───────────────────────────────────────────────────────────────────────────────
+
+# Build outputs
+**/build/
+/captures
+.externalNativeBuild
+.cxx
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+
+# Gradle
+.gradle/
+.kotlin/
+*.iml
+
+# Local environment / SDK paths (per-developer)
+local.properties
+
+# JetBrains / IntelliJ / Android Studio
+.idea/
+*.swp
+*.iws
+*.ipr
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Keystores & credentials — NEVER commit
+*.keystore
+*.jks
+google-services.json
+firebase-debug.log
+firebase-debug.*.log
+
+# Secrets / env
+*.env
+.env.*
+
+# Logs
+*.log
+hs_err_pid*
+
+# Local Claude / Cowork / agent artifacts
+.claude/
+.aider*
+
+# Test reports (regenerated locally)
+**/test-output/

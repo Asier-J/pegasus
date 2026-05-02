@@ -41,13 +41,13 @@ fun TripDetailScreen(
 ) {
     val colors = MaterialTheme.colorScheme
 
-    // Reload data when entering the screen
-    LaunchedEffect(tripId) {
-        tripViewModel.loadTrips()
+    // Sprint 03: trips Flow is hot, only activities still need an explicit load.
+    var trip by remember { mutableStateOf<com.example.pegasus.domain.Trip?>(null) }
+    val trips by tripViewModel.trips.collectAsState()
+    LaunchedEffect(tripId, trips) {
+        trip = trips.firstOrNull { it.id == tripId } ?: tripViewModel.getTripById(tripId)
         activityViewModel.loadActivities(tripId)
     }
-
-    val trip       = tripViewModel.getTripById(tripId)
     val activities by activityViewModel.activities.collectAsState()
 
     // ── Delete trip confirmation dialog ────────────────────────────────────────
@@ -150,7 +150,9 @@ fun TripDetailScreen(
                 )
                 .padding(innerPadding)
         ) {
-            if (trip == null) {
+            // Sprint 03: snapshot the delegated state to a local val so smart-cast works.
+            val currentTrip = trip
+            if (currentTrip == null) {
                 // Trip not found — should not normally happen
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(stringResource(R.string.trip_detail_not_found), color = colors.onSurfaceVariant)
@@ -171,7 +173,7 @@ fun TripDetailScreen(
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Text(
-                                    text       = trip.title,
+                                    text       = currentTrip.title,
                                     color      = colors.onSurface,
                                     fontWeight = FontWeight.Bold,
                                     fontSize   = 20.sp
@@ -183,16 +185,16 @@ fun TripDetailScreen(
                                 ) {
                                     Text(text = "📅", fontSize = 16.sp)
                                     Text(
-                                        text     = "${trip.startDate}  →  ${trip.endDate}",
+                                        text     = "${currentTrip.startDate}  →  ${currentTrip.endDate}",
                                         color    = colors.primary,
                                         fontSize = 14.sp,
                                         fontWeight = FontWeight.Medium
                                     )
                                 }
-                                if (trip.description.isNotBlank()) {
+                                if (currentTrip.description.isNotBlank()) {
                                     Spacer(modifier = Modifier.height(10.dp))
                                     Text(
-                                        text     = trip.description,
+                                        text     = currentTrip.description,
                                         color    = colors.onSurfaceVariant,
                                         fontSize = 14.sp,
                                         lineHeight = 20.sp

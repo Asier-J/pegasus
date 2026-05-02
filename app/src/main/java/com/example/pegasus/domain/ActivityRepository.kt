@@ -1,12 +1,14 @@
 package com.example.pegasus.domain
 
+import kotlinx.coroutines.flow.Flow
+
 // ─── ActivityRepository ───────────────────────────────────────────────────────
-// Interface defining CRUD operations for Activity entities.
-// Implementations: ActivityRepositoryImpl (uses FakeTripDataSource).
+// Sprint 03: Room-backed. Activities live inside a Trip; deleting a Trip cascades.
 interface ActivityRepository {
-    fun getActivitiesByTripId(tripId: String): List<Activity>
-    fun getActivityById(id: String): Activity?
-    fun addActivity(activity: Activity)
-    fun updateActivity(activity: Activity)
-    fun deleteActivity(id: String)
+    fun observeActivities(tripId: String): Flow<List<Activity>>
+    suspend fun getActivitiesByTripId(tripId: String): List<Activity>
+    suspend fun getActivityById(id: String): Activity?
+    suspend fun addActivity(activity: Activity)
+    suspend fun updateActivity(activity: Activity)
+    suspend fun deleteActivity(id: String)
 }

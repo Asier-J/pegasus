@@ -27,7 +27,8 @@ import com.example.pegasus.domain.Trip
 import com.example.pegasus.ui.viewmodels.TripViewModel
 
 // ─── TripListScreen ────────────────────────────────────────────────────────────
-// Displays all trips from TripViewModel (backed by FakeTripDataSource).
+// Displays all trips from TripViewModel (Sprint 03: backed by Room, scoped to
+// the logged-in Firebase user).
 // Navigation: tap a trip → TripDetailScreen; FAB → AddEditTripScreen.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,9 +38,7 @@ fun TripListScreen(
 ) {
     val colors = MaterialTheme.colorScheme
 
-    // Reload trips every time this screen enters composition (e.g. after navigating back)
-    LaunchedEffect(Unit) { tripViewModel.loadTrips() }
-
+    // Sprint 03: trips are now a hot Flow scoped to the logged-in user — no manual reload needed.
     val trips  by tripViewModel.trips.collectAsState()
     var visible by remember { mutableStateOf(false) }
     val alpha  by animateFloatAsState(

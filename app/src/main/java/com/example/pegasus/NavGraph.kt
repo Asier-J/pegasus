@@ -3,9 +3,11 @@ package com.example.pegasus
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -14,8 +16,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.example.pegasus.ui.screens.*
 import com.example.pegasus.ui.viewmodels.ActivityViewModel
+import com.example.pegasus.ui.viewmodels.AuthViewModel
 import com.example.pegasus.ui.viewmodels.TripViewModel
 
+/**
+ * Sprint 03: Adds auth routes (login / register / recover) and an auth guard
+ * that redirects unauthenticated users to "login" while preserving the rest
+ * of the navigation graph. ViewModels are now Hilt-injected via `hiltViewModel()`.
+ */
 @Composable
 fun NavGraph(navController: NavHostController) {
 
@@ -23,10 +31,22 @@ fun NavGraph(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // ── Shared ViewModels (activity-scoped via NavGraph) ───────────────────────
-    // Both ViewModels are created once and shared across all Trip/Activity screens.
-    val tripViewModel: TripViewModel         = viewModel()
-    val activityViewModel: ActivityViewModel = viewModel()
+    // ── Auth state guard ───────────────────────────────────────────────────────
+    val authViewModel: AuthViewModel = hiltViewModel()
+    val currentUser by authViewModel.currentUser.collectAsState()
+    val authRoutes = setOf("login", "register", "recover", "splash")
+
+    // If session ends while the user is on a protected screen, bounce to login.
+    // Note: ProfileScreen also navigates explicitly on logout — this guard is the
+    // safety net for any other case (token expiry, deletion in Firebase Console…).
+    LaunchedEffect(currentUser, currentRoute) {
+        if (currentUser == null && currentRoute != null && currentRoute !in authRoutes) {
+            navController.navigate("login") {
+                popUpTo(navController.graph.id) { inclusive = true }
+                launchSingleTop = true
+            }
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -43,25 +63,29 @@ fun NavGraph(navController: NavHostController) {
             // ── Splash ────────────────────────────────────────────────────────
             composable("splash") { SplashScreen(navController) }
 
+            // ── Auth screens (Sprint 03) ──────────────────────────────────────
+            composable("login")    { LoginScreen(navController) }
+            composable("register") { RegisterScreen(navController) }
+            composable("recover")  { RecoverPasswordScreen(navController) }
+
             // ── Bottom nav screens ─────────────────────────────────────────────
             composable("home")    { HomeScreen(navController) }
-            composable("trips")   { TripListScreen(navController, tripViewModel) }
+            composable("trips")   {
+                val tripViewModel: TripViewModel = hiltViewModel()
+                TripListScreen(navController, tripViewModel)
+            }
             composable("map")     { MapScreen(navController) }
             composable("ai")      { AIRecommendationScreen(navController) }
             composable("profile") { ProfileScreen(navController) }
 
             // ── Trip CRUD screens ──────────────────────────────────────────────
-
-            // Add new trip
             composable("add_trip") {
                 AddEditTripScreen(
                     navController = navController,
-                    tripViewModel = tripViewModel,
+                    tripViewModel = hiltViewModel(),
                     tripId        = null
                 )
             }
-
-            // Edit existing trip
             composable(
                 route     = "edit_trip/{tripId}",
                 arguments = listOf(navArgument("tripId") { type = NavType.StringType })
@@ -69,12 +93,10 @@ fun NavGraph(navController: NavHostController) {
                 val tripId = backStackEntry.arguments?.getString("tripId")
                 AddEditTripScreen(
                     navController = navController,
-                    tripViewModel = tripViewModel,
+                    tripViewModel = hiltViewModel(),
                     tripId        = tripId
                 )
             }
-
-            // Trip detail (shows trip info + activity list)
             composable(
                 route     = "trip_detail/{tripId}",
                 arguments = listOf(navArgument("tripId") { type = NavType.StringType })
@@ -82,15 +104,13 @@ fun NavGraph(navController: NavHostController) {
                 val tripId = backStackEntry.arguments?.getString("tripId") ?: return@composable
                 TripDetailScreen(
                     navController     = navController,
-                    tripViewModel     = tripViewModel,
-                    activityViewModel = activityViewModel,
+                    tripViewModel     = hiltViewModel(),
+                    activityViewModel = hiltViewModel<ActivityViewModel>(),
                     tripId            = tripId
                 )
             }
 
             // ── Activity CRUD screens ──────────────────────────────────────────
-
-            // Add new activity to a trip
             composable(
                 route     = "add_activity/{tripId}",
                 arguments = listOf(navArgument("tripId") { type = NavType.StringType })
@@ -98,13 +118,11 @@ fun NavGraph(navController: NavHostController) {
                 val tripId = backStackEntry.arguments?.getString("tripId") ?: return@composable
                 AddEditActivityScreen(
                     navController     = navController,
-                    activityViewModel = activityViewModel,
+                    activityViewModel = hiltViewModel(),
                     tripId            = tripId,
                     activityId        = null
                 )
             }
-
-            // Edit existing activity
             composable(
                 route     = "edit_activity/{tripId}/{activityId}",
                 arguments = listOf(
@@ -116,16 +134,16 @@ fun NavGraph(navController: NavHostController) {
                 val activityId = backStackEntry.arguments?.getString("activityId") ?: return@composable
                 AddEditActivityScreen(
                     navController     = navController,
-                    activityViewModel = activityViewModel,
+                    activityViewModel = hiltViewModel(),
                     tripId            = tripId,
                     activityId        = activityId
                 )
             }
 
             // ── Detail screens (no bottom bar) ─────────────────────────────────
-            composable("terms")       { TermsAndConditionsScreen(navController) }
-            composable("about")       { AboutScreen(navController) }
-            composable("preferences") { PreferencesScreen(navController) }
+            composable("terms")           { TermsAndConditionsScreen(navController) }
+            composable("about")           { AboutScreen(navController) }
+            composable("preferences")     { PreferencesScreen(navController) }
             composable("trip_photo_list") { TripPhotoListScreen(navController) }
             composable(
                 route     = "trip_gallery/{tripId}",

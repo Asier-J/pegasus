@@ -387,3 +387,77 @@ A pin displayed on the `TripMap`. Created automatically by `TripMap.addMarker()`
 - `addMarker()` — geocode string location and pin on map
 - `getRoute()` — integrate Google Directions API
 - `filterMarkersByType()` — toggle marker visibility by category
+---
+
+## 4. Sprint 03 — Persistence & Authentication Layer
+
+Sprint 03 replaced the in-memory `FakeTripDataSource` with a real **Room** SQLite database, integrated **Firebase Authentication**, and adopted **Hilt** as the application-wide DI container.
+
+### 4.1 Architecture
+
+```
+UI (Compose Screens)
+    └── ViewModel (@HiltViewModel)
+            └── Repository interface (TripRepository, ActivityRepository, UserRepository, AuthRepository)
+                    └── Implementation (@Inject + @Binds via Hilt)
+                            ├── Room DAOs → SQLite (local persistence)
+                            └── FirebaseAuth (authentication)
+```
+
+### 4.2 Database schema (`pegasus.db`, version 2)
+
+| Table | Columns | Notes |
+|---|---|---|
+| `users`        | `uid` PK (TEXT), `email` (TEXT), `username` (TEXT, unique), `displayName` (TEXT), `birthdate` (TEXT, dd/MM/yyyy), `address` (TEXT), `country` (TEXT), `phone` (TEXT), `acceptEmails` (INTEGER), `photoUrl` (TEXT, nullable), `createdAt` (INTEGER, epoch ms) | Mirror of the Firebase account + the extended profile (T4.1). Username uniqueness enforced by index + repository check. |
+| `trips`        | `id` PK (TEXT), `userId` (TEXT, FK → `users.uid` CASCADE), `title` (TEXT), `startDate` (TEXT, dd/MM/yyyy), `endDate` (TEXT, dd/MM/yyyy), `description` (TEXT), `budget` (INTEGER), `createdAt` (INTEGER, epoch ms) | Multi-user storage (T4.2): every read query is scoped to `userId`. Satisfies T1.2 (text + integer + datetime). |
+| `activities`   | `id` PK (TEXT), `tripId` (TEXT, FK → `trips.id` CASCADE), `title` (TEXT), `description` (TEXT), `date` (TEXT, ISO-8601 LocalDate), `time` (TEXT, ISO-8601 LocalTime), `durationMinutes` (INTEGER), `createdAt` (INTEGER, epoch ms) | Cascade-deleted with the parent trip. Satisfies T1.2. |
+| `access_logs`  | `id` PK auto (INTEGER), `userId` (TEXT, no FK — see note), `event` (TEXT: `"LOGIN"` / `"LOGOUT"`), `timestamp` (INTEGER, epoch ms) | One row per login/logout (T4.4). FK to `users.uid` was intentionally removed in schema v2 so audit logs are always writable, even before the local user mirror is populated for accounts created outside the app. |
+
+`LocalDate` and `LocalTime` are persisted as ISO-8601 strings via `@TypeConverters(Converters)`.
+
+**v1 → v2 migration strategy:** dropped the FK constraint on `access_logs.userId`. `fallbackToDestructiveMigration()` is enabled in dev (in `di/AppModule.kt`) — for production, write proper `Migration` objects.
+
+### 4.3 New / updated files (Sprint 03)
+
+**New (Sprint 03):**
+- `data/local/AppDatabase.kt` + `Converters.kt`
+- `data/local/dao/{TripDao, ActivityDao, UserDao, AccessLogDao}.kt`
+- `data/repository/{UserRepositoryImpl, AuthRepositoryImpl}.kt`
+- `domain/{UserRepository, AuthRepository, AccessLog}.kt`
+- `ui/viewmodels/{AuthViewModel, UserViewModel}.kt`
+- `ui/screens/{LoginScreen, RegisterScreen, RecoverPasswordScreen}.kt`
+- `di/AppModule.kt` (Hilt: `DatabaseModule`, `FirebaseModule`, `RepositoryModule`)
+- `PegasusApplication.kt` (`@HiltAndroidApp`)
+
+**Modified (Sprint 03):**
+- `domain/{Trip, Activity, User}.kt` — promoted to Room `@Entity` with foreign keys
+- `domain/{TripRepository, ActivityRepository}.kt` — interfaces now expose `suspend` + `Flow`
+- `data/repository/{TripRepositoryImpl, ActivityRepositoryImpl}.kt` — Room-backed
+- `ui/viewmodels/{TripViewModel, ActivityViewModel}.kt` — Hilt-injected, `@HiltViewModel`
+- `ui/screens/{TripListScreen, TripDetailScreen, AddEditTripScreen, AddEditActivityScreen, ProfileScreen}.kt` — adapted to new VM API
+- `MainActivity.kt` — `@AndroidEntryPoint`
+- `NavGraph.kt` — adds `login`, `register`, `recover` routes + auth guard
+- `AndroidManifest.xml` — `INTERNET` permission and `android:name=".PegasusApplication"`
+- `app/build.gradle.kts`, `gradle/libs.versions.toml`, root `build.gradle.kts` — Hilt, Room, Firebase, KSP, Google Services
+
+### 4.4 Authentication flow
+
+```
+[Splash] → (no session) → Login ─┬── Register (creates user, sends verification email,
+                                  │                  saves profile in Room, logs LOGIN)
+                                  └── Recover (sends Firebase reset email)
+
+[Login OK]   → AccessLog(LOGIN)  → home
+[Logout]     → AccessLog(LOGOUT) → login (auth guard)
+```
+
+### 4.5 Multi-user data ownership (T4.2)
+
+Every trip row carries the owner's Firebase `uid`. `TripViewModel.trips` is a `flatMapLatest` over the Firebase auth-state Flow, so logging in/out automatically swaps the visible trip list to the active user's data set without manual refresh.
+
+### 4.6 Validation (T5.2)
+
+- Trip dates: `startDate ≤ endDate` (existing rule).
+- Trip title: per-user uniqueness check via `TripDao.isTitleTakenByOther`.
+- Username: per-app uniqueness check via `UserDao` index + `UserRepository.isUsernameTakenByOther`.
+- Activity date: must fall inside the parent trip's `[startDate, endDate]` range.

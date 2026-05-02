@@ -45,17 +45,18 @@ fun AddEditActivityScreen(
     val colors      = MaterialTheme.colorScheme
     val scrollState = rememberScrollState()
 
-    // Pre-fill if editing
-    val existingActivity = remember(activityId) {
-        activityId?.let { activityViewModel.getActivityById(it) }
+    // Sprint 03: load existing activity via suspend call when editing.
+    var existingActivity by remember { mutableStateOf<com.example.pegasus.domain.Activity?>(null) }
+    LaunchedEffect(activityId) {
+        if (activityId != null) existingActivity = activityViewModel.getActivityById(activityId)
     }
-    val isEditMode = existingActivity != null
+    val isEditMode = activityId != null
 
     // ── Form state ─────────────────────────────────────────────────────────────
-    var title       by remember { mutableStateOf(existingActivity?.title       ?: "") }
-    var description by remember { mutableStateOf(existingActivity?.description ?: "") }
-    var date        by remember { mutableStateOf<LocalDate?>(existingActivity?.date) }
-    var time        by remember { mutableStateOf<LocalTime?>(existingActivity?.time) }
+    var title       by remember(existingActivity) { mutableStateOf(existingActivity?.title       ?: "") }
+    var description by remember(existingActivity) { mutableStateOf(existingActivity?.description ?: "") }
+    var date        by remember(existingActivity) { mutableStateOf<LocalDate?>(existingActivity?.date) }
+    var time        by remember(existingActivity) { mutableStateOf<LocalTime?>(existingActivity?.time) }
 
     val dateFmt = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     val timeFmt = DateTimeFormatter.ofPattern("HH:mm")
@@ -257,14 +258,16 @@ fun AddEditActivityScreen(
                 // ── Save button ────────────────────────────────────────────────
                 Button(
                     onClick = {
-                        val success = if (isEditMode) {
+                        // Sprint 03: VM now uses suspend operations + onResult callback.
+                        if (isEditMode && existingActivity != null) {
                             activityViewModel.updateActivity(
                                 existingActivity!!.id, tripId, title, description, date, time
-                            )
+                            ) { ok -> if (ok) navController.safePopBackStack() }
                         } else {
-                            activityViewModel.addActivity(tripId, title, description, date, time)
+                            activityViewModel.addActivity(tripId, title, description, date, time) { ok ->
+                                if (ok) navController.safePopBackStack()
+                            }
                         }
-                        if (success) navController.safePopBackStack()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
