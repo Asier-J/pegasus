@@ -11,7 +11,13 @@ import com.example.pegasus.ui.screens.applyLocaleToContext
 import com.example.pegasus.ui.screens.getSavedLanguage
 import com.example.pegasus.ui.screens.getSavedTheme
 import com.example.pegasus.ui.theme.PegasusTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * Sprint 03: `@AndroidEntryPoint` makes Hilt DI available to this Activity and
+ * any `hiltViewModel()` calls inside Compose.
+ */
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     // Aplica el idioma guardado antes de que arranque la Activity

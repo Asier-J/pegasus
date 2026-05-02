@@ -17,13 +17,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.pegasus.R
+import com.example.pegasus.ui.viewmodels.AuthViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(navController: NavHostController) {
+fun SplashScreen(
+    navController: NavHostController,
+    authViewModel: AuthViewModel = hiltViewModel()
+) {
     val colors = MaterialTheme.colorScheme
+    // Sprint 03 — T2: at startup we check whether a session exists and route to
+    // either "home" (logged in) or "login" (logged out).
 
     // ── Animation states ──────────────────────────────────────────────────────
     var logoVisible   by remember { mutableStateOf(false) }
@@ -74,7 +81,9 @@ fun SplashScreen(navController: NavHostController) {
             animationSpec = tween(1800, easing = EaseInOutCubic)
         )
         delay(200)
-        navController.navigate("home") {
+        // Auth-aware routing: if there is no Firebase session, go to login.
+        val destination = if (authViewModel.currentUser.value != null) "home" else "login"
+        navController.navigate(destination) {
             popUpTo("splash") { inclusive = true }
         }
     }

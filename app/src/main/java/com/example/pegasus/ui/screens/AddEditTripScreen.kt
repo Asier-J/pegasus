@@ -39,15 +39,18 @@ fun AddEditTripScreen(
     val colors      = MaterialTheme.colorScheme
     val scrollState = rememberScrollState()
 
-    // Pre-fill form when editing
-    val existingTrip = remember(tripId) { tripId?.let { tripViewModel.getTripById(it) } }
-    val isEditMode   = existingTrip != null
+    // Sprint 03: load existing trip via suspend repository call when editing.
+    var existingTrip by remember { mutableStateOf<com.example.pegasus.domain.Trip?>(null) }
+    LaunchedEffect(tripId) {
+        if (tripId != null) existingTrip = tripViewModel.getTripById(tripId)
+    }
+    val isEditMode = tripId != null
 
     // ── Form state ─────────────────────────────────────────────────────────────
-    var title       by remember { mutableStateOf(existingTrip?.title       ?: "") }
-    var startDate   by remember { mutableStateOf(existingTrip?.startDate   ?: "") }
-    var endDate     by remember { mutableStateOf(existingTrip?.endDate     ?: "") }
-    var description by remember { mutableStateOf(existingTrip?.description ?: "") }
+    var title       by remember(existingTrip) { mutableStateOf(existingTrip?.title       ?: "") }
+    var startDate   by remember(existingTrip) { mutableStateOf(existingTrip?.startDate   ?: "") }
+    var endDate     by remember(existingTrip) { mutableStateOf(existingTrip?.endDate     ?: "") }
+    var description by remember(existingTrip) { mutableStateOf(existingTrip?.description ?: "") }
 
     // ── DatePicker dialog state ────────────────────────────────────────────────
     var showStartDatePicker by remember { mutableStateOf(false) }
@@ -236,12 +239,16 @@ fun AddEditTripScreen(
                 // ── Save button ────────────────────────────────────────────────
                 Button(
                     onClick = {
-                        val success = if (isEditMode) {
-                            tripViewModel.editTrip(existingTrip!!.id, title, startDate, endDate, description)
+                        // Sprint 03: VM now uses suspend operations and reports success via callback.
+                        if (isEditMode && existingTrip != null) {
+                            tripViewModel.editTrip(existingTrip!!.id, title, startDate, endDate, description) { ok ->
+                                if (ok) navController.safePopBackStack()
+                            }
                         } else {
-                            tripViewModel.addTrip(title, startDate, endDate, description)
+                            tripViewModel.addTrip(title, startDate, endDate, description) { ok ->
+                                if (ok) navController.safePopBackStack()
+                            }
                         }
-                        if (success) navController.safePopBackStack()
                     },
                     modifier = Modifier
                         .fillMaxWidth()

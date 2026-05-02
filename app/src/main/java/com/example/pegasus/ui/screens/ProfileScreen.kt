@@ -25,10 +25,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.pegasus.R
+import com.example.pegasus.ui.viewmodels.AuthViewModel
+import com.example.pegasus.ui.viewmodels.UserViewModel
 
-// ─── Mock Data ────────────────────────────────────────────────────────────────
+// ─── Fallback data (when no user is logged in or profile not yet loaded) ──────
 private data class MockUser(
     val name: String,
     val email: String,
@@ -48,9 +51,16 @@ private val mockUser = MockUser(
 // ─── Screen ───────────────────────────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(
+    navController: NavController,
+    authViewModel: AuthViewModel = hiltViewModel(),
+    userViewModel: UserViewModel = hiltViewModel()
+) {
     val colors      = MaterialTheme.colorScheme
     val scrollState = rememberScrollState()
+    // Sprint 03: read the persisted profile (Room) and the current Firebase session.
+    val profile by userViewModel.currentProfile.collectAsState()
+    val session by authViewModel.currentUser.collectAsState()
 
     var visible by remember { mutableStateOf(false) }
     val alpha by animateFloatAsState(
@@ -117,14 +127,15 @@ fun ProfileScreen(navController: NavController) {
                         }
                         Spacer(modifier = Modifier.width(16.dp))
                         Column {
+                            // Sprint 03: prefer the persisted profile, fall back to Firebase email or mock.
                             Text(
-                                text       = mockUser.name,
+                                text       = profile?.displayName ?: profile?.username ?: mockUser.name,
                                 color      = colors.onSurface,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize   = 16.sp
                             )
                             Text(
-                                text     = mockUser.email,
+                                text     = profile?.email ?: session?.email ?: mockUser.email,
                                 color    = colors.onSurfaceVariant,
                                 fontSize = 13.sp
                             )
@@ -175,7 +186,18 @@ fun ProfileScreen(navController: NavController) {
                         icon     = Icons.Filled.Logout,
                         label    = stringResource(id = R.string.profile_row_logout),
                         sublabel = stringResource(id = R.string.profile_row_logout_sub),
-                        onClick  = { /* @TODO implement logout */ },
+                        // Sprint 03: logout records an access-log row, clears the Firebase
+                        // session, and navigates to "login" clearing the entire back stack.
+                        // We do the navigation explicitly here (instead of relying solely on
+                        // the auth guard in NavGraph) so it is deterministic regardless of
+                        // observer timing across ViewModel scopes.
+                        onClick  = {
+                            authViewModel.logout()
+                            navController.navigate("login") {
+                                popUpTo(navController.graph.id) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        },
                         tintRed  = true
                     )
                 }

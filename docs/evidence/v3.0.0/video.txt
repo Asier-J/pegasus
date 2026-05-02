@@ -1,0 +1,4 @@
+Mismo formato que el anterior sprint por exactamente los mismos problemas.
+https://udlcat-my.sharepoint.com/:v:/g/personal/ajo1_alumnes_udl_cat/IQCiyi6zWmOPRLLAtr540bMpAY94OErLd08MUq2aUsjlwss?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=tS8qrW
+He sido más laxo con las pruebas porque ya está demostrado en el sprint anterior, me he centrado más en la parte de login.
+Aún así, sale todo el flujo del programa.

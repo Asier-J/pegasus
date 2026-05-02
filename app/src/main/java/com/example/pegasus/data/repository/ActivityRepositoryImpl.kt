@@ -1,26 +1,46 @@
 package com.example.pegasus.data.repository
 
-import com.example.pegasus.data.fakeDB.FakeTripDataSource
+import android.util.Log
+import com.example.pegasus.data.local.dao.ActivityDao
 import com.example.pegasus.domain.Activity
 import com.example.pegasus.domain.ActivityRepository
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
 // ─── ActivityRepositoryImpl ────────────────────────────────────────────────────
-// Concrete implementation of ActivityRepository backed by FakeTripDataSource.
-// Architecture: UI → ViewModel → ActivityRepository → ActivityRepositoryImpl → FakeTripDataSource
-class ActivityRepositoryImpl : ActivityRepository {
+// Sprint 03: Room-backed implementation.
+@Singleton
+class ActivityRepositoryImpl @Inject constructor(
+    private val activityDao: ActivityDao
+) : ActivityRepository {
 
-    override fun getActivitiesByTripId(tripId: String): List<Activity> =
-        FakeTripDataSource.getActivitiesByTripId(tripId)
+    override fun observeActivities(tripId: String): Flow<List<Activity>> =
+        activityDao.observeByTripId(tripId)
 
-    override fun getActivityById(id: String): Activity? =
-        FakeTripDataSource.getActivityById(id)
+    override suspend fun getActivitiesByTripId(tripId: String): List<Activity> =
+        activityDao.getByTripId(tripId).also {
+            Log.d(TAG, "getActivitiesByTripId($tripId): ${it.size} activities")
+        }
 
-    override fun addActivity(activity: Activity) =
-        FakeTripDataSource.addActivity(activity)
+    override suspend fun getActivityById(id: String): Activity? = activityDao.getById(id)
 
-    override fun updateActivity(activity: Activity) =
-        FakeTripDataSource.updateActivity(activity)
+    override suspend fun addActivity(activity: Activity) {
+        activityDao.insert(activity)
+        Log.i(TAG, "addActivity: '${activity.title}' on trip ${activity.tripId}")
+    }
 
-    override fun deleteActivity(id: String) =
-        FakeTripDataSource.deleteActivity(id)
+    override suspend fun updateActivity(activity: Activity) {
+        activityDao.update(activity)
+        Log.i(TAG, "updateActivity: '${activity.title}' (id=${activity.id})")
+    }
+
+    override suspend fun deleteActivity(id: String) {
+        activityDao.deleteById(id)
+        Log.i(TAG, "deleteActivity: id=$id")
+    }
+
+    private companion object {
+        const val TAG = "ActivityRepository"
+    }
 }

@@ -24,7 +24,7 @@
     <string name="about_title">Quant a</string>
     <string name="about_back_button_description">Enrere</string>
     <string name="about_app_name">Pegasus</string>
-    <string name="about_version">v2.0.0</string>
+    <string name="about_version">v3.0.0</string>
     <string name="about_summary_title">Quant a l\'App</string>
     <string name="about_summary_body">Pegasus és una app de planificació de viatges que et dóna ales per a explorar el món. Organitza els teus itineraris, descobreix llocs extraordinaris i vola cap a la teva propera aventura sense preocupacions. Creada amb Kotlin i Jetpack Compose.</string>
     <string name="about_tech_stack_title">Tecnologies Utilitzades</string>
