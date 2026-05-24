@@ -31,13 +31,15 @@ sealed class BottomNavItem(val route: String, val icon: ImageVector, val labelRe
     object Map     : BottomNavItem("map",     Icons.Filled.Map,      R.string.nav_map)
     object AI      : BottomNavItem("ai",      Icons.Filled.Star,       R.string.nav_ai)
     object Profile : BottomNavItem("profile", Icons.Filled.Person,     R.string.nav_profile)
-    object Gallery  : BottomNavItem("trip_photo_list", Icons.Filled.PhotoLibrary, R.string.nav_gallery)
+
+    // Sprint 04: Hotels replaces the previous mock-photo Gallery tab.
+    object Hotels  : BottomNavItem("hotel_search", Icons.Filled.Hotel, R.string.nav_hotels)
 }
 
 val bottomNavItems = listOf(
     BottomNavItem.Home,
     BottomNavItem.Trips,
-    BottomNavItem.Gallery,
+    BottomNavItem.Hotels,
     BottomNavItem.Map,
     BottomNavItem.AI,
     BottomNavItem.Profile

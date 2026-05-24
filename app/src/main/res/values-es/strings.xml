@@ -24,7 +24,7 @@
     <string name="about_title">Acerca de</string>
     <string name="about_back_button_description">Atrás</string>
     <string name="about_app_name">Pegasus</string>
-    <string name="about_version">v3.0.0</string>
+    <string name="about_version">v4.0.0</string>
     <string name="about_summary_title">Acerca de la App</string>
     <string name="about_summary_body">Pegasus es una app de planificación de viajes que te da alas para explorar el mundo. Organiza tus itinerarios, descubre lugares extraordinarios y vuela hacia tu próxima aventura sin preocupaciones. Creada con Kotlin y Jetpack Compose.</string>
     <string name="about_tech_stack_title">Tecnologías Utilizadas</string>
@@ -271,4 +271,65 @@
     <string name="select_date_description">Seleccionar fecha</string>
     <string name="select_time_description">Seleccionar hora</string>
     <string name="time_picker_title">Selecciona una hora</string>
+
+    <!-- Sprint 04 — Hoteles / Reservas / Galería -->
+    <string name="nav_hotels">Hoteles</string>
+    <string name="nav_reservations">Reservas</string>
+
+    <string name="hotel_search_title">Buscar hotel</string>
+    <string name="hotel_search_city_label">Ciudad</string>
+    <string name="hotel_search_city_bcn">Barcelona</string>
+    <string name="hotel_search_city_par">París</string>
+    <string name="hotel_search_city_lon">Londres</string>
+    <string name="hotel_search_start_date">Entrada</string>
+    <string name="hotel_search_end_date">Salida</string>
+    <string name="hotel_search_button">Buscar</string>
+    <string name="hotel_search_loading">Buscando hoteles disponibles…</string>
+    <string name="hotel_search_empty">No hay hoteles disponibles para tu búsqueda</string>
+    <string name="hotel_search_initial_hint">Elige una ciudad y unas fechas para ver los hoteles disponibles.</string>
+    <string name="hotel_search_rooms_count">Habitaciones: %1$d</string>
+    <string name="hotel_search_from_price">Desde %1$.0f € / noche</string>
+    <string name="hotel_search_rating">Valoración: %1$d/5</string>
+
+    <string name="hotel_detail_back">Atrás</string>
+    <string name="hotel_detail_stay_format">Estancia: %1$s → %2$s</string>
+    <string name="hotel_detail_room_price">%1$.0f € / noche</string>
+    <string name="hotel_detail_room_total">Total: %1$.0f €</string>
+    <string name="hotel_detail_reserve_button">Reservar</string>
+    <string name="hotel_detail_no_rooms">No hay habitaciones disponibles</string>
+    <string name="hotel_detail_booking_ok">Reserva confirmada</string>
+    <string name="hotel_detail_booking_ok_message">Reserva %1$s guardada (%2$d noches).</string>
+    <string name="hotel_detail_view_bookings">Mis reservas</string>
+    <string name="hotel_detail_dismiss">Cerrar</string>
+
+    <string name="reservations_title">Mis reservas</string>
+    <string name="reservations_empty_title">Aún no tienes reservas</string>
+    <string name="reservations_empty_hint">Busca un hotel y reserva una habitación para verla aquí.</string>
+    <string name="reservations_card_dates_format">%1$s → %2$s</string>
+    <string name="reservations_card_price_format">Precio: %1$.0f €</string>
+    <string name="reservations_card_guest_format">Huésped: %1$s</string>
+    <string name="reservations_card_trip_format">Viaje: %1$s</string>
+    <string name="reservations_cancel_dialog_title">¿Cancelar reserva?</string>
+    <string name="reservations_cancel_dialog_message">Se eliminará la reserva y el viaje vinculado. No se puede deshacer.</string>
+    <string name="reservations_cancel_dialog_confirm">Cancelar reserva</string>
+    <string name="reservations_cancel_dialog_dismiss">Mantener</string>
+
+    <string name="trip_gallery_title">Galería del viaje</string>
+    <string name="trip_gallery_add_button">Añadir foto</string>
+    <string name="trip_gallery_empty_title">Sin fotos aún</string>
+    <string name="trip_gallery_empty_hint">Toca + para añadir fotos desde tu galería.</string>
+    <string name="trip_gallery_delete_dialog_title">¿Eliminar foto?</string>
+    <string name="trip_gallery_delete_dialog_message">La foto se quitará de este viaje.</string>
+    <string name="trip_gallery_delete_dialog_confirm">Eliminar</string>
+    <string name="trip_gallery_delete_dialog_dismiss">Cancelar</string>
+    <string name="trip_gallery_section_title">Fotos</string>
+    <string name="trip_gallery_view_all">Ver todas</string>
+
+    <string name="trip_detail_reservation_section">Reserva de hotel</string>
+    <string name="trip_detail_reservation_room_format">%1$s · %2$s</string>
+    <string name="trip_detail_reservation_dates_format">%1$s → %2$s (%3$d noches)</string>
+    <string name="trip_detail_reservation_total_format">Total: %1$.0f €</string>
+    <string name="trip_detail_reservation_open">Abrir en reservas</string>
+
+    <string name="trip_list_hotel_badge">Hotel</string>
 </resources>

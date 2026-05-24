@@ -15,10 +15,14 @@ android {
         applicationId = "com.example.pegasus"
         minSdk = 26
         targetSdk = 36
-        versionCode = 3
-        versionName = "3.0.0"
+        versionCode = 4
+        versionName = "4.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Sprint 04 — Hotels API config (group_id "G10" → Juárez Ontiveros, Asier)
+        buildConfigField("String", "HOTELS_API_URL", "\"http://15.224.84.148:8090/\"")
+        buildConfigField("String", "GROUP_ID",       "\"G10\"")
     }
 
     buildTypes {
@@ -39,6 +43,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true   // Sprint 04 — required for HOTELS_API_URL / GROUP_ID
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
@@ -82,6 +87,15 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.play.services)   // Task.await() for Firebase
 
+    // Retrofit + OkHttp (Sprint 04 — remote persistence)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp.logging.interceptor)
+
+    // Coil 3 — image loading (Sprint 04 — hotel/room images + local gallery)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
     // Tests
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
@@ -91,6 +105,7 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.okhttp.mockwebserver)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

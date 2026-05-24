@@ -25,8 +25,19 @@ class UserRepositoryImpl @Inject constructor(
             Log.w(TAG, "saveUser: username '${user.username}' already taken")
             error("Username '${user.username}' is already in use")
         }
-        userDao.insert(user)
-        Log.i(TAG, "saveUser: stored profile for uid=${user.uid}")
+        // Sprint 04 hotfix: `saveUser` now upserts instead of plain insert. The
+        // Sprint 04 AuthViewModel `init` block races against the Register flow
+        // and may have already inserted a stub row via `ensureLocalProfile`; a
+        // second `insert` for the same uid would otherwise crash with
+        // SQLITE_CONSTRAINT_PRIMARYKEY (1555).
+        val existing = userDao.getByUid(user.uid)
+        if (existing != null) {
+            userDao.update(user)
+            Log.i(TAG, "saveUser: upserted profile for uid=${user.uid}")
+        } else {
+            userDao.insert(user)
+            Log.i(TAG, "saveUser: stored profile for uid=${user.uid}")
+        }
     }
 
     override suspend fun updateUser(user: User): Result<Unit> = runCatching {

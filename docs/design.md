@@ -461,3 +461,110 @@ Every trip row carries the owner's Firebase `uid`. `TripViewModel.trips` is a `f
 - Trip title: per-user uniqueness check via `TripDao.isTitleTakenByOther`.
 - Username: per-app uniqueness check via `UserDao` index + `UserRepository.isUsernameTakenByOther`.
 - Activity date: must fall inside the parent trip's `[startDate, endDate]` range.
+
+---
+
+## 5. Sprint 04 — Remote Persistence & Local Gallery
+
+### 5.1 Architecture
+
+```
+UI (Screens)
+    └── ViewModel  (HotelViewModel, ReservationViewModel, TripImageViewModel
+                    + Sprint 03 VMs)
+            └── Repository interface
+                    └── RepositoryImpl  (Hilt @Singleton)
+                            ├── Retrofit → HotelApiService  →  REST API   (T1 / T2 / T4)
+                            ├── Room DAOs   → SQLite                       (local persistence)
+                            └── Internal storage (filesDir/trip_images/<id>)  (T3 — image files)
+```
+
+`HotelApiService` is built by `di/NetworkModule.kt` from
+`BuildConfig.HOTELS_API_URL` and the chosen `BuildConfig.GROUP_ID` (`"G10"`),
+both wired in `app/build.gradle.kts`. The same module provides the
+`OkHttpClient` (with `HttpLoggingInterceptor` at `BODY` in debug) and the
+`Retrofit` instance.
+
+### 5.2 Remote API consumed
+
+Base URL: `http://15.224.84.148:8090/` · Group id: **G10**.
+
+| Verb   | Path                                | Used by                              |
+|--------|-------------------------------------|--------------------------------------|
+| GET    | `/hotels/G10/hotels`                | `HotelRepository.listAllHotels`      |
+| GET    | `/hotels/G10/availability`          | `HotelRepository.checkAvailability`  |
+| POST   | `/hotels/G10/reserve`               | `HotelRepository.reserveRoom`        |
+| GET    | `/hotels/G10/reservations`          | (available, currently unused)        |
+| DELETE | `/reservations/{res_id}`            | `HotelRepository.cancelReservation`  |
+
+The API speaks dates as `YYYY-MM-DD` and only accepts bookings in
+**May–June 2025**. The local Trip layer still uses `dd/MM/yyyy` for backward
+compatibility; the conversion happens inside `HotelViewModel.bookRoom`.
+
+### 5.3 Schema v3
+
+Two new tables join the v2 schema:
+
+| Table | Fields | Notes |
+|---|---|---|
+| `reservations` | `id` (TEXT, PK), `tripId` (TEXT, FK → `trips.id`, CASCADE), `hotelId`, `hotelName`, `hotelAddress`, `hotelImageUrl`, `roomId`, `roomType`, `roomImageUrl`, `pricePerNight` (REAL), `startDate`, `endDate` (both `YYYY-MM-DD`), `nights` (INTEGER), `guestName`, `guestEmail`, `createdAt` (INTEGER) | Denormalised hotel/room snapshots so the bookings list survives offline (T2.3, T4). |
+| `trip_images` | `id` (TEXT, PK), `tripId` (TEXT, FK → `trips.id`, CASCADE), `localPath` (TEXT — absolute path), `addedAt` (INTEGER) | The image bytes live on disk under `filesDir/trip_images/<tripId>/<uuid>.jpg` (T3). |
+
+Cascade rules: deleting a Trip wipes its reservations *and* gallery rows.
+`fallbackToDestructiveMigration()` stays enabled; a proper `Migration` will be
+added before the production release.
+
+### 5.4 DTO ↔ Domain mapping
+
+`data/remote/dto/` holds JSON-mirroring DTOs
+(`HotelDto`, `RoomDto`, `AvailabilityResponseDto`, `ReserveRequestDto`,
+`ReservationDto`, `ReservationResponseDto`, `ApiMessageDto`).
+`data/remote/mapper/DtoMappers.kt` turns them into `Hotel` / `Room` domain
+models and converts the API's relative image URLs (e.g.
+`/images/BCN01.png`) into absolute URLs using the base URL.
+
+### 5.5 New / updated files (Sprint 04)
+
+**New (Sprint 04):**
+- `data/remote/api/HotelApiService.kt`
+- `data/remote/dto/{HotelDto, RoomDto, AvailabilityResponseDto, ReserveRequestDto,
+  ReservationDto, ReservationResponseDto, ApiMessageDto}.kt`
+- `data/remote/mapper/DtoMappers.kt`
+- `data/repository/{HotelRepositoryImpl, ReservationRepositoryImpl, TripImageRepositoryImpl}.kt`
+- `data/local/dao/{ReservationDao, TripImageDao}.kt`
+- `data/local/ImageFileStorage.kt`
+- `domain/{Hotel, Room, Reservation, TripImage}.kt`
+- `domain/{HotelRepository, ReservationRepository, TripImageRepository}.kt`
+- `ui/viewmodels/{HotelViewModel, ReservationViewModel, TripImageViewModel}.kt`
+- `ui/screens/{HotelSearchScreen, HotelDetailScreen, ReservationListScreen}.kt`
+- `di/NetworkModule.kt`
+
+**Modified (Sprint 04):**
+- `data/local/AppDatabase.kt` — v3, adds `Reservation` + `TripImage`
+- `di/AppModule.kt` — new DAO providers + bindings for the three new repositories
+- `AndroidManifest.xml` — `usesCleartextTraffic="true"` + photo-read permissions
+- `app/build.gradle.kts` — version 4.0.0, `buildConfigField`s, Retrofit/OkHttp/Coil deps
+- `gradle/libs.versions.toml` — `retrofit`, `okhttp`, `coil`, `mockwebserver`
+- `NavGraph.kt` — `hotel_search`, `hotel_detail/{id}`, `reservations`,
+  `trip_gallery/{tripId}` (now `String`)
+- `ui/screens/HomeScreen.kt` — `BottomNavItem.Hotels` replaces `Gallery`
+- `ui/screens/TripDetailScreen.kt` — embeds gallery + reservation summary
+- `ui/screens/TripListScreen.kt` — `🏨 Hotel` badge when a trip has a reservation
+- `ui/screens/TripGalleryScreen.kt` — rewritten on top of `TripImageViewModel`
+- `res/values/strings.xml` (+ `values-es`, `values-ca`) — new strings for the
+  hotels, reservations and gallery flows
+
+**Removed (Sprint 04):**
+- `ui/screens/TripPhotoListScreen.kt`, `ui/screens/TripData.kt` (Sprint 03 mocks)
+
+### 5.6 Logging
+
+| Tag | Sample levels |
+|---|---|
+| `HotelRepository` | `D` attempt, `I` success (size / id), `E` failure |
+| `ReservationRepository` | `D` reads, `I` writes |
+| `TripImageRepository` | `D` reads, `I` writes |
+| `HotelViewModel`, `ReservationViewModel`, `TripImageViewModel` | `I` ok / `W` validation / `E` failure |
+
+OkHttp `HttpLoggingInterceptor` is configured at `BODY` in debug (full request
+and response bodies) and `BASIC` in release.
