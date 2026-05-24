@@ -1,0 +1,4 @@
+Mismo formato que el anterior sprint por exactamente los mismos problemas.
+https://udlcat-my.sharepoint.com/:v:/g/personal/ajo1_alumnes_udl_cat/IQBNGILvp-0-S5VeyhcksETEAQRQ2s8uNyWtG7Y6hZ_rTIo?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=q1VzzP
+He sido más laxo con las pruebas porque ya está demostrado en el sprint anterior, como antes. Ahora me he centrado en la parte de hotel y de las fotografías de la galería.
+Aún así, sale todo el flujo del programa.

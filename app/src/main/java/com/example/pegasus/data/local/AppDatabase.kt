@@ -5,24 +5,31 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.pegasus.data.local.dao.AccessLogDao
 import com.example.pegasus.data.local.dao.ActivityDao
+import com.example.pegasus.data.local.dao.ReservationDao
 import com.example.pegasus.data.local.dao.TripDao
+import com.example.pegasus.data.local.dao.TripImageDao
 import com.example.pegasus.data.local.dao.UserDao
 import com.example.pegasus.domain.AccessLog
 import com.example.pegasus.domain.Activity
+import com.example.pegasus.domain.Reservation
 import com.example.pegasus.domain.Trip
+import com.example.pegasus.domain.TripImage
 import com.example.pegasus.domain.User
 
 /**
  * Sprint 03: Room database for Pegasus.
  *
- * Schema v2:
+ * Schema v3:
  *  - users          (uid PK, unique username)
  *  - trips          (id PK, userId FK → users.uid, CASCADE)
  *  - activities     (id PK, tripId FK → trips.id, CASCADE)
  *  - access_logs    (id PK auto, userId — plain text, no FK so audit logs are
  *                    always writable even if the local user mirror isn't ready)
+ *  - reservations   (id PK, tripId FK → trips.id, CASCADE) — Sprint 04 T2/T4
+ *  - trip_images    (id PK, tripId FK → trips.id, CASCADE) — Sprint 04 T3
  *
  * v1 → v2: dropped the FK constraint on access_logs.userId.
+ * v2 → v3: added `reservations` and `trip_images`.
  *
  * `fallbackToDestructiveMigration` is enabled in the Hilt module ONLY for
  * development convenience — proper Migration objects must be added before
@@ -33,9 +40,11 @@ import com.example.pegasus.domain.User
         User::class,
         Trip::class,
         Activity::class,
-        AccessLog::class
+        AccessLog::class,
+        Reservation::class,
+        TripImage::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -44,6 +53,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun tripDao(): TripDao
     abstract fun activityDao(): ActivityDao
     abstract fun accessLogDao(): AccessLogDao
+    abstract fun reservationDao(): ReservationDao
+    abstract fun tripImageDao(): TripImageDao
 
     companion object {
         const val DB_NAME = "pegasus.db"

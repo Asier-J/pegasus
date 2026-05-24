@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -17,6 +18,7 @@ import androidx.navigation.navArgument
 import com.example.pegasus.ui.screens.*
 import com.example.pegasus.ui.viewmodels.ActivityViewModel
 import com.example.pegasus.ui.viewmodels.AuthViewModel
+import com.example.pegasus.ui.viewmodels.HotelViewModel
 import com.example.pegasus.ui.viewmodels.TripViewModel
 
 /**
@@ -27,7 +29,7 @@ import com.example.pegasus.ui.viewmodels.TripViewModel
 @Composable
 fun NavGraph(navController: NavHostController) {
 
-    val bottomNavRoutes = listOf("home", "trips", "trip_photo_list", "map", "ai", "profile")
+    val bottomNavRoutes = listOf("home", "trips", "hotel_search", "map", "ai", "profile")
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -144,12 +146,30 @@ fun NavGraph(navController: NavHostController) {
             composable("terms")           { TermsAndConditionsScreen(navController) }
             composable("about")           { AboutScreen(navController) }
             composable("preferences")     { PreferencesScreen(navController) }
-            composable("trip_photo_list") { TripPhotoListScreen(navController) }
+
+            // Sprint 04 — Hotels (remote) + Reservations + Trip gallery (T2/T3/T4)
+            //
+            // HotelDetailScreen shares the SearchScreen's HotelViewModel so the
+            // already-loaded hotel list is reused (otherwise `hotelById` returns
+            // null on the detail screen and the user sees an empty page).
+            composable("hotel_search") {
+                val parent = remember(it) { navController.getBackStackEntry("hotel_search") }
+                HotelSearchScreen(navController, hiltViewModel<HotelViewModel>(parent))
+            }
+            composable(
+                route     = "hotel_detail/{hotelId}",
+                arguments = listOf(navArgument("hotelId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val hotelId = backStackEntry.arguments?.getString("hotelId") ?: return@composable
+                val parent  = remember(backStackEntry) { navController.getBackStackEntry("hotel_search") }
+                HotelDetailScreen(navController, hotelId, hiltViewModel<HotelViewModel>(parent))
+            }
+            composable("reservations") { ReservationListScreen(navController) }
             composable(
                 route     = "trip_gallery/{tripId}",
-                arguments = listOf(navArgument("tripId") { type = NavType.IntType })
+                arguments = listOf(navArgument("tripId") { type = NavType.StringType })
             ) {
-                val tripId = it.arguments?.getInt("tripId") ?: 1
+                val tripId = it.arguments?.getString("tripId") ?: return@composable
                 TripGalleryScreen(navController, tripId)
             }
         }

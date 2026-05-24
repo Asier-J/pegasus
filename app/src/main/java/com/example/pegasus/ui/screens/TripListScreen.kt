@@ -21,9 +21,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.pegasus.R
 import com.example.pegasus.domain.Trip
+import com.example.pegasus.ui.viewmodels.ReservationViewModel
 import com.example.pegasus.ui.viewmodels.TripViewModel
 
 // ─── TripListScreen ────────────────────────────────────────────────────────────
@@ -40,6 +42,10 @@ fun TripListScreen(
 
     // Sprint 03: trips are now a hot Flow scoped to the logged-in user — no manual reload needed.
     val trips  by tripViewModel.trips.collectAsState()
+    // Sprint 04 T4.4 — mark trips that have a hotel reservation.
+    val reservationViewModel: ReservationViewModel = hiltViewModel()
+    val reservations by reservationViewModel.reservations.collectAsState()
+    val tripsWithReservation = remember(reservations) { reservations.map { it.tripId }.toSet() }
     var visible by remember { mutableStateOf(false) }
     val alpha  by animateFloatAsState(
         targetValue   = if (visible) 1f else 0f,
@@ -127,6 +133,7 @@ fun TripListScreen(
                     items(trips, key = { it.id }) { trip ->
                         TripListCard(
                             trip       = trip,
+                            hasHotel   = trip.id in tripsWithReservation,
                             onClick    = { navController.navigate("trip_detail/${trip.id}") }
                         )
                     }
@@ -173,7 +180,7 @@ private fun StatChip(label: String, value: String, modifier: Modifier = Modifier
 
 // ─── TripListCard ──────────────────────────────────────────────────────────────
 @Composable
-private fun TripListCard(trip: Trip, onClick: () -> Unit) {
+private fun TripListCard(trip: Trip, hasHotel: Boolean, onClick: () -> Unit) {
     val colors = MaterialTheme.colorScheme
     Card(
         modifier  = Modifier
@@ -212,19 +219,21 @@ private fun TripListCard(trip: Trip, onClick: () -> Unit) {
                         }
                     }
                 }
-                // Date chip
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(colors.primaryContainer.copy(alpha = 0.25f))
-                        .padding(horizontal = 10.dp, vertical = 4.dp)
-                ) {
-                    Text(
-                        text       = "📅",
-                        fontSize   = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color      = colors.primary
-                    )
+                // Sprint 04 T4.4 — hotel badge if a reservation is linked to this trip.
+                if (hasHotel) {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(colors.primaryContainer.copy(alpha = 0.35f))
+                            .padding(horizontal = 10.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            text       = "🏨 " + stringResource(R.string.trip_list_hotel_badge),
+                            fontSize   = 11.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color      = colors.primary
+                        )
+                    }
                 }
             }
 

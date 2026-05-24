@@ -1,8 +1,10 @@
 package com.example.pegasus.ui.screens
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -17,121 +19,173 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import com.example.pegasus.R
+import com.example.pegasus.domain.TripImage
+import com.example.pegasus.safePopBackStack
+import com.example.pegasus.ui.viewmodels.TripImageViewModel
+import java.io.File
 
+/**
+ * Sprint 04 T3 — Real per-trip gallery (replaces the Sprint 03 mock).
+ *
+ * - Uses the Android 13+ Photo Picker so we don't need runtime READ_MEDIA_IMAGES.
+ * - Photos are copied into app-internal storage and listed via
+ *   [TripImageViewModel.images]. Tap a photo to delete it (with confirmation).
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TripGalleryScreen(
     navController: NavController,
-    tripId: Int
+    tripId: String,
+    viewModel: TripImageViewModel = hiltViewModel()
 ) {
-    val trip = remember(tripId) { mockPhotoTrips.find { it.id == tripId } }
-    var backEnabled by remember { mutableStateOf(true) }
+    val colors = MaterialTheme.colorScheme
 
-    var visible by remember { mutableStateOf(false) }
-    val alpha by animateFloatAsState(
-        targetValue = if (visible) 1f else 0f,
-        animationSpec = tween(600),
-        label = "fade"
-    )
+    LaunchedEffect(tripId) { viewModel.setTripId(tripId) }
 
-    var photos by remember { mutableStateOf(trip?.photos ?: emptyList()) }
+    val images by viewModel.images.collectAsState()
+    val error  by viewModel.errorMessage.collectAsState()
 
-    LaunchedEffect(Unit) { visible = true }
+    val snackbarHost = remember { SnackbarHostState() }
+    LaunchedEffect(error) {
+        error?.let {
+            snackbarHost.showSnackbar(it)
+            viewModel.clearError()
+        }
+    }
+
+    // Sprint 04 T3.1 — OpenDocument(arrayOf("image/*")) launches the SAF
+    // (system file browser). It does NOT depend on MediaStore being indexed,
+    // so it shows ANY file the user navigates to — Downloads, Pictures,
+    // Screenshots, SD card, etc. This is the most robust picker for emulators
+    // where the Photo Picker / MediaStore behave unpredictably.
+    val picker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        Log.d("TripGalleryScreen", "Picker returned uri=$uri tripId=$tripId")
+        if (uri != null) viewModel.addImage(tripId, uri)
+    }
+
+    var imageToDelete by remember { mutableStateOf<TripImage?>(null) }
+    if (imageToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { imageToDelete = null },
+            title = { Text(stringResource(R.string.trip_gallery_delete_dialog_title)) },
+            text  = { Text(stringResource(R.string.trip_gallery_delete_dialog_message)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.deleteImage(imageToDelete!!)
+                    imageToDelete = null
+                }) {
+                    Text(
+                        text  = stringResource(R.string.trip_gallery_delete_dialog_confirm),
+                        color = colors.error
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { imageToDelete = null }) {
+                    Text(stringResource(R.string.trip_gallery_delete_dialog_dismiss))
+                }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = if (trip != null) stringResource(id = trip.nameResId) else stringResource(id = R.string.gallery_default_title),
-                        color = Color(0xFFF0F6FF),
+                        text = stringResource(R.string.trip_gallery_title),
+                        color = colors.onBackground,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
                     )
                 },
                 navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            if (backEnabled) {
-                                backEnabled = false
-                                navController.popBackStack()
-                            }
-                        }
-                    ) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(id = R.string.gallery_back_button), tint = Color(0xFF42A5F5))
+                    IconButton(onClick = { navController.safePopBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.hotel_detail_back),
+                            tint = colors.primary
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF0A1628))
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = androidx.compose.ui.graphics.Color.Transparent
+                )
             )
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* TODO: pick photo from gallery */ },
-                containerColor = Color(0xFF1565C0),
-                contentColor = Color(0xFFF0F6FF),
-                shape = RoundedCornerShape(16.dp)
+                onClick = {
+                    Log.d("TripGalleryScreen", "FAB clicked, launching picker")
+                    picker.launch(arrayOf("image/*"))
+                },
+                containerColor = colors.primary,
+                contentColor   = colors.onPrimary,
+                shape          = RoundedCornerShape(16.dp)
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.gallery_add_photo))
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.trip_gallery_add_button))
             }
         },
-        containerColor = Color.Transparent
+        snackbarHost = { SnackbarHost(snackbarHost) }
     ) { padding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Brush.verticalGradient(colors = listOf(Color(0xFF0A1628), Color(0xFF102040))))
+                .background(
+                    Brush.verticalGradient(listOf(colors.background, colors.surfaceVariant))
+                )
                 .padding(padding)
-                .alpha(alpha)
         ) {
-            if (photos.isEmpty()) {
+            if (images.isEmpty()) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(text = "📷", fontSize = 48.sp)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(text = stringResource(id = R.string.gallery_no_photos), color = Color(0xFFF0F6FF), fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = stringResource(id = R.string.gallery_add_first_photo_hint), color = Color(0xFFB0BEC5), fontSize = 13.sp, textAlign = TextAlign.Center)
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        text = stringResource(R.string.trip_gallery_empty_title),
+                        color = colors.onSurfaceVariant,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 16.sp
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(R.string.trip_gallery_empty_hint),
+                        color = colors.onSurfaceVariant,
+                        fontSize = 13.sp,
+                        textAlign = TextAlign.Center
+                    )
                 }
             } else {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    val countText = if (photos.size == 1) {
-                        stringResource(id = R.string.gallery_photo_count_singular)
-                    } else {
-                        stringResource(id = R.string.gallery_photo_count_plural, photos.size)
-                    }
-                    Text(
-                        text = countText,
-                        color = Color(0xFFB0BEC5),
-                        fontSize = 12.sp,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                    )
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3),
-                        modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp),
-                        contentPadding = PaddingValues(bottom = 88.dp)
-                    ) {
-                        items(photos, key = { it.id }) { photo ->
-                            PhotoCell(
-                                photo = photo,
-                                onDelete = { photos = photos.filter { p -> p.id != photo.id } }
-                            )
-                        }
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(3),
+                    modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                    contentPadding = PaddingValues(top = 8.dp, bottom = 88.dp)
+                ) {
+                    items(images, key = { it.id }) { image ->
+                        PhotoCell(
+                            image = image,
+                            onClick = { imageToDelete = image }
+                        )
                     }
                 }
             }
@@ -140,27 +194,31 @@ fun TripGalleryScreen(
 }
 
 @Composable
-private fun PhotoCell(photo: TripPhoto, onDelete: () -> Unit) {
+private fun PhotoCell(image: TripImage, onClick: () -> Unit) {
+    val colors = MaterialTheme.colorScheme
     Box(
         modifier = Modifier
             .aspectRatio(1f)
             .clip(RoundedCornerShape(8.dp))
-            .background(photo.color)
+            .background(colors.surfaceVariant)
+            .clickable(onClick = onClick)
     ) {
-        IconButton(
-            onClick = onDelete,
+        AsyncImage(
+            model = File(image.localPath),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
+        Icon(
+            imageVector = Icons.Default.Close,
+            contentDescription = stringResource(R.string.trip_gallery_delete_dialog_confirm),
+            tint = colors.onPrimary,
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(4.dp)
                 .size(24.dp)
-                .background(Color(0xCC0A1628), CircleShape)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = stringResource(id = R.string.gallery_delete_photo),
-                tint = Color(0xFFF0F6FF),
-                modifier = Modifier.size(14.dp)
-            )
-        }
+                .background(colors.primary.copy(alpha = 0.7f), CircleShape)
+                .padding(4.dp)
+        )
     }
 }

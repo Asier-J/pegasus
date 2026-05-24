@@ -7,6 +7,12 @@ import com.example.pegasus.domain.AccessLog
 import com.example.pegasus.domain.AuthRepository
 import com.example.pegasus.domain.User
 import com.example.pegasus.domain.UserRepository
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.FirebaseTooManyRequestsException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -42,6 +48,24 @@ class AuthViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
+    init {
+        // Sprint 04 hotfix: keep the local User row in sync with the Firebase
+        // session at all times. Without this, a user who:
+        //   1) signed in in a previous install (Firebase keeps the session), and
+        //   2) lost the local row because Room migrated destructively (v2 → v3),
+        // would skip the login() path and therefore never call ensureLocalProfile.
+        // The next foreign-keyed write (e.g. inserting a Trip when booking a
+        // hotel) would then fail with SQLITE_CONSTRAINT_FOREIGNKEY.
+        viewModelScope.launch {
+            authRepository.observeCurrentUser().collect { user ->
+                if (user != null) {
+                    runCatching { ensureLocalProfile(user) }
+                        .onFailure { Log.w(TAG, "ensureLocalProfile (init) failed", it) }
+                }
+            }
+        }
+    }
+
     data class UiState(
         val isLoading: Boolean = false,
         val errorMessage: String? = null,
@@ -76,7 +100,7 @@ class AuthViewModel @Inject constructor(
                 }
                 .onFailure {
                     Log.e(TAG, "login failed", it)
-                    _uiState.value = UiState(errorMessage = it.localizedMessage ?: ERROR_LOGIN_GENERIC)
+                    _uiState.value = UiState(errorMessage = translateAuthError(it, ERROR_LOGIN_GENERIC))
                 }
         }
     }
@@ -163,7 +187,7 @@ class AuthViewModel @Inject constructor(
                 }
                 .onFailure {
                     Log.e(TAG, "register failed", it)
-                    _uiState.value = UiState(errorMessage = it.localizedMessage ?: ERROR_REGISTER_GENERIC)
+                    _uiState.value = UiState(errorMessage = translateAuthError(it, ERROR_REGISTER_GENERIC))
                 }
         }
     }
@@ -186,7 +210,7 @@ class AuthViewModel @Inject constructor(
                 }
                 .onFailure {
                     Log.e(TAG, "recoverPassword failed", it)
-                    _uiState.value = UiState(errorMessage = it.localizedMessage ?: ERROR_RECOVER_GENERIC)
+                    _uiState.value = UiState(errorMessage = translateAuthError(it, ERROR_RECOVER_GENERIC))
                 }
         }
     }
@@ -208,17 +232,43 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             authRepository.sendEmailVerification()
                 .onSuccess { _uiState.value = _uiState.value.copy(infoMessage = INFO_VERIFICATION_SENT) }
-                .onFailure { _uiState.value = _uiState.value.copy(errorMessage = it.localizedMessage) }
+                .onFailure {
+                    _uiState.value = _uiState.value.copy(
+                        errorMessage = translateAuthError(it, ERROR_VERIFICATION_GENERIC)
+                    )
+                }
         }
+    }
+
+    /**
+     * Sprint 03: Firebase Auth devuelve sus mensajes en inglés (su `localizedMessage`
+     * ignora el locale del dispositivo). Mapeamos las excepciones más comunes a
+     * mensajes en español; para el resto caemos al mensaje genérico.
+     */
+    private fun translateAuthError(t: Throwable, fallback: String): String = when (t) {
+        is FirebaseAuthInvalidCredentialsException ->
+            "Email o contraseña incorrectos"
+        is FirebaseAuthInvalidUserException ->
+            "No existe ninguna cuenta con ese email"
+        is FirebaseAuthWeakPasswordException ->
+            "La contraseña es demasiado débil (mínimo 6 caracteres)"
+        is FirebaseAuthUserCollisionException ->
+            "Ya existe una cuenta con ese email"
+        is FirebaseNetworkException ->
+            "Sin conexión a internet"
+        is FirebaseTooManyRequestsException ->
+            "Demasiados intentos. Espera unos segundos y vuelve a intentarlo."
+        else -> fallback
     }
 
     companion object {
         private const val TAG = "AuthViewModel"
         const val ERROR_FIELDS_EMPTY     = "Rellena todos los campos obligatorios"
         const val ERROR_USERNAME_TAKEN   = "Ese nombre de usuario ya está en uso"
-        const val ERROR_LOGIN_GENERIC    = "No se ha podido iniciar sesión"
-        const val ERROR_REGISTER_GENERIC = "No se ha podido crear la cuenta"
-        const val ERROR_RECOVER_GENERIC  = "No se ha podido enviar el correo de recuperación"
+        const val ERROR_LOGIN_GENERIC        = "No se ha podido iniciar sesión"
+        const val ERROR_REGISTER_GENERIC     = "No se ha podido crear la cuenta"
+        const val ERROR_RECOVER_GENERIC      = "No se ha podido enviar el correo de recuperación"
+        const val ERROR_VERIFICATION_GENERIC = "No se ha podido enviar el correo de verificación"
         const val INFO_VERIFICATION_SENT = "Te hemos enviado un correo para verificar tu cuenta"
         const val INFO_RESET_SENT        = "Te hemos enviado un correo para recuperar la contraseña"
     }

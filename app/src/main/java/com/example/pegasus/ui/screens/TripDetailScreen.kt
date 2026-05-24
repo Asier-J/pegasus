@@ -1,8 +1,10 @@
 package com.example.pegasus.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -10,22 +12,31 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import com.example.pegasus.R
 import com.example.pegasus.domain.Activity
+import com.example.pegasus.domain.Reservation
+import com.example.pegasus.domain.TripImage
 import com.example.pegasus.safePopBackStack
 import com.example.pegasus.ui.viewmodels.ActivityViewModel
+import com.example.pegasus.ui.viewmodels.ReservationViewModel
+import com.example.pegasus.ui.viewmodels.TripImageViewModel
 import com.example.pegasus.ui.viewmodels.TripViewModel
+import java.io.File
 import java.time.format.DateTimeFormatter
 
 // ─── TripDetailScreen ──────────────────────────────────────────────────────────
@@ -49,6 +60,15 @@ fun TripDetailScreen(
         activityViewModel.loadActivities(tripId)
     }
     val activities by activityViewModel.activities.collectAsState()
+
+    // Sprint 04 — pull the gallery + the reservation (if any) for this trip.
+    val tripImageViewModel: TripImageViewModel = hiltViewModel()
+    LaunchedEffect(tripId) { tripImageViewModel.setTripId(tripId) }
+    val tripImages by tripImageViewModel.images.collectAsState()
+
+    val reservationViewModel: ReservationViewModel = hiltViewModel()
+    val allReservations by reservationViewModel.reservations.collectAsState()
+    val tripReservation = allReservations.firstOrNull { it.tripId == tripId }
 
     // ── Delete trip confirmation dialog ────────────────────────────────────────
     var showDeleteTripDialog by remember { mutableStateOf(false) }
@@ -204,6 +224,25 @@ fun TripDetailScreen(
                         }
                     }
 
+                    // ── Sprint 04 — Reservation summary (if a hotel was booked) ─
+                    if (tripReservation != null) {
+                        item {
+                            ReservationSummary(
+                                reservation = tripReservation,
+                                onOpen      = { navController.navigate("reservations") }
+                            )
+                        }
+                    }
+
+                    // ── Sprint 04 — Trip gallery ───────────────────────────────
+                    item {
+                        TripGallerySection(
+                            images     = tripImages,
+                            onSeeAll   = { navController.navigate("trip_gallery/$tripId") },
+                            onAddOpen  = { navController.navigate("trip_gallery/$tripId") }
+                        )
+                    }
+
                     // ── Activities header ──────────────────────────────────────
                     item {
                         Row(
@@ -248,6 +287,143 @@ fun TripDetailScreen(
                     }
 
                     item { Spacer(modifier = Modifier.height(80.dp)) }
+                }
+            }
+        }
+    }
+}
+
+// ─── Sprint 04 — Reservation summary card ─────────────────────────────────────
+@Composable
+private fun ReservationSummary(reservation: Reservation, onOpen: () -> Unit) {
+    val colors = MaterialTheme.colorScheme
+    Card(
+        modifier  = Modifier.fillMaxWidth().clickable(onClick = onOpen),
+        shape     = RoundedCornerShape(12.dp),
+        colors    = CardDefaults.cardColors(containerColor = colors.surface),
+        elevation = CardDefaults.cardElevation(0.dp)
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Text(
+                text       = stringResource(R.string.trip_detail_reservation_section),
+                color      = colors.onBackground,
+                fontWeight = FontWeight.SemiBold,
+                fontSize   = 14.sp
+            )
+            Spacer(Modifier.height(6.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (reservation.hotelImageUrl.isNotBlank()) {
+                    AsyncImage(
+                        model = reservation.hotelImageUrl,
+                        contentDescription = reservation.hotelName,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(colors.surfaceVariant)
+                    )
+                    Spacer(Modifier.width(10.dp))
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text  = "${reservation.hotelName} (${reservation.hotelId})",
+                        color = colors.onSurface,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Text(
+                        text  = stringResource(
+                            R.string.trip_detail_reservation_room_format,
+                            reservation.roomType, reservation.roomId
+                        ),
+                        color = colors.onSurfaceVariant,
+                        fontSize = 12.sp
+                    )
+                    Text(
+                        text  = stringResource(
+                            R.string.trip_detail_reservation_dates_format,
+                            reservation.startDate, reservation.endDate, reservation.nights
+                        ),
+                        color = colors.primary,
+                        fontSize = 12.sp
+                    )
+                    Text(
+                        text  = stringResource(
+                            R.string.trip_detail_reservation_total_format,
+                            reservation.totalPrice
+                        ),
+                        color = colors.primary,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 12.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+// ─── Sprint 04 — Trip gallery preview ─────────────────────────────────────────
+@Composable
+private fun TripGallerySection(
+    images: List<TripImage>,
+    onSeeAll: () -> Unit,
+    onAddOpen: () -> Unit
+) {
+    val colors = MaterialTheme.colorScheme
+    Card(
+        modifier  = Modifier.fillMaxWidth(),
+        shape     = RoundedCornerShape(12.dp),
+        colors    = CardDefaults.cardColors(containerColor = colors.surface),
+        elevation = CardDefaults.cardElevation(0.dp)
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.trip_gallery_section_title),
+                    color = colors.onBackground,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 14.sp
+                )
+                TextButton(onClick = onSeeAll) {
+                    Text(stringResource(R.string.trip_gallery_view_all))
+                }
+            }
+
+            if (images.isEmpty()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().clickable(onClick = onAddOpen),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.PhotoLibrary,
+                        contentDescription = null,
+                        tint = colors.primary
+                    )
+                    Text(
+                        text = stringResource(R.string.trip_gallery_empty_hint),
+                        color = colors.onSurfaceVariant,
+                        fontSize = 12.sp
+                    )
+                }
+            } else {
+                Spacer(Modifier.height(4.dp))
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    items(images.take(8), key = { it.id }) { image ->
+                        AsyncImage(
+                            model = File(image.localPath),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(width = 76.dp, height = 76.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(colors.surfaceVariant)
+                        )
+                    }
                 }
             }
         }
